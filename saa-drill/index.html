@@ -1,0 +1,908 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SAA 隙間ドリル</title>
+<meta name="description" content="AWS 認定ソリューションアーキテクト – アソシエイト（SAA-C03）の隙間時間向け問題集。間違えた問題は間隔反復で忘れた頃に再出題。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --surface-2:#E9EDEA; --ink:#17202A; --muted:#58636E; --line:#D6DCD8;
+  --accent:#1D6679; --accent-ink:#FFFFFF; --accent-soft:#DCEBEF;
+  --ok:#2C7549; --ok-soft:#E0F0E6; --ng:#AE3F2F; --ng-soft:#F6E2DD; --warn:#8E6210; --warn-soft:#F4EAD2;
+  --iso-top:#E4EAE6; --iso-l:#C6D0CB; --iso-r:#B1BDB7; --iso-hl-top:#1D6679; --iso-hl-l:#15505F; --iso-hl-r:#0F404C; --iso-hl-ink:#FFFFFF;
+  --mark:#F6E3A6;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#11161B; --surface:#1A2128; --surface-2:#222B33; --ink:#E4E9ED; --muted:#98A4AE; --line:#2E3842;
+    --accent:#62B4CB; --accent-ink:#0B1A20; --accent-soft:#1B3540;
+    --ok:#6CC08E; --ok-soft:#18311F; --ng:#E88A7A; --ng-soft:#3A1F1A; --warn:#E0B456; --warn-soft:#352A12;
+    --iso-top:#2A343D; --iso-l:#1F2830; --iso-r:#182027; --iso-hl-top:#62B4CB; --iso-hl-l:#3E8A9F; --iso-hl-r:#2C6E80; --iso-hl-ink:#0B1A20;
+    --mark:#5A4A17;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#11161B; --surface:#1A2128; --surface-2:#222B33; --ink:#E4E9ED; --muted:#98A4AE; --line:#2E3842;
+  --accent:#62B4CB; --accent-ink:#0B1A20; --accent-soft:#1B3540;
+  --ok:#6CC08E; --ok-soft:#18311F; --ng:#E88A7A; --ng-soft:#3A1F1A; --warn:#E0B456; --warn-soft:#352A12;
+  --iso-top:#2A343D; --iso-l:#1F2830; --iso-r:#182027; --iso-hl-top:#62B4CB; --iso-hl-l:#3E8A9F; --iso-hl-r:#2C6E80; --iso-hl-ink:#0B1A20;
+  --mark:#5A4A17;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:20px 40px}
+h1,h2,h3{text-wrap:balance;line-height:1.35;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* header */
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{font-size:22px;font-weight:700;letter-spacing:.01em}
+.brand small{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.04em}
+.sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.sync[data-s="cloud"] i{background:var(--ok)}
+.sync[data-s="error"] i{background:var(--ng)}
+
+/* today panel */
+.today{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:16px}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.num b{display:block;font-family:var(--mono);font-size:28px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.num span{font-size:12px;color:var(--muted)}
+.num.due b{color:var(--warn)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:12px 12px 10px;text-align:left;display:grid;gap:2px}
+.mode strong{font-size:16px}
+.mode span{font-size:12px;color:var(--muted)}
+.mode.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mode.primary span{color:var(--accent-ink);opacity:.85}
+.mode:disabled{opacity:.45;cursor:default}
+
+section.block{margin-top:22px}
+section.block > h2{font-size:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+section.block > h2 .label{font-weight:400}
+.dom{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.drow{display:grid;grid-template-columns:7.5em 1fr 3.2em;align-items:center;gap:10px;font-size:13px}
+.drow .nm b{font-weight:700}
+.drow .nm span{display:block;font-size:11px;color:var(--muted)}
+.track{height:8px;border-radius:4px;background:var(--surface-2);position:relative;overflow:hidden}
+.track i{position:absolute;inset:0 auto 0 0;background:var(--accent);border-radius:4px}
+.drow .pct{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 12px 10px}
+.wd{display:grid;gap:4px;justify-items:center;font-size:11px;color:var(--muted)}
+.wd .col{width:100%;max-width:26px;height:56px;display:flex;align-items:flex-end}
+.wd .col i{display:block;width:100%;background:var(--warn);border-radius:3px 3px 0 0;opacity:.85}
+.wd b{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:12px}
+
+.notes{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14px}
+.notes ul{margin:6px 0 0;padding-left:1.2em}
+.notes li{margin:4px 0}
+.foot{margin-top:22px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font-size:12px}
+.linkbtn.danger{color:var(--ng)}
+
+/* quiz */
+.qhead{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qhead .chip{font-size:11px;padding:1px 8px}
+.chip{font-size:12px;border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.chip.rev{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.chip.multi{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:700}
+.qhead .grow{flex:1}
+.quit{background:none;border:1px solid var(--line);border-radius:8px;padding:2px 10px;font-size:13px;color:var(--muted)}
+.progress{height:4px;background:var(--surface-2);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.stem{font-size:17px;line-height:1.85;margin:0 0 18px}
+.stem mark{background:transparent;color:inherit}
+.answered .stem mark{background:var(--mark);border-radius:3px;padding:0 2px}
+.opts{display:grid;gap:10px}
+.opt{display:grid;grid-template-columns:2em 1fr;gap:8px;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;line-height:1.65}
+.opt .key{font-family:var(--mono);font-weight:600;color:var(--muted)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .key{color:var(--accent)}
+.opt .why{grid-column:2;font-size:14px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+.answered .opt{cursor:default}
+.answered .opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.answered .opt.ok .key{color:var(--ok)}
+.answered .opt.bad{border-color:var(--ng);background:var(--ng-soft)}
+.answered .opt.bad .key{color:var(--ng)}
+.answered .opt.ok .why,.answered .opt.bad .why{color:var(--ink)}
+.mk{font-weight:700;margin-right:4px}
+.opt.ok .mk{color:var(--ok)} .opt.bad .mk{color:var(--ng)}
+
+.actions{position:sticky;bottom:0;padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to bottom,transparent,var(--bg) 30%);display:flex;gap:8px;margin-top:8px}
+.btn{flex:1;border:0;border-radius:12px;padding:14px 12px;font-size:16px;font-weight:700;background:var(--accent);color:var(--accent-ink)}
+.btn.sub{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn small{display:block;font-size:11px;font-weight:500;opacity:.8}
+
+.result{margin-top:22px;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.result.ok{background:var(--ok-soft);color:var(--ok)}
+.result.bad{background:var(--ng-soft);color:var(--ng)}
+.result h3{font-size:20px}
+.result .next{font-size:13px;color:var(--ink)}
+.result .next b{font-family:var(--mono)}
+.exp{display:grid;gap:14px;margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card h4{margin:0 0 6px;font-size:13px;color:var(--accent);letter-spacing:.04em}
+.card p{margin:0}
+.story p{font-size:15.5px;line-height:1.95}
+.iso svg{width:100%;height:auto;display:block}
+.iso .t{fill:var(--iso-top)} .iso .l{fill:var(--iso-l)} .iso .r{fill:var(--iso-r)}
+.iso .hl .t{fill:var(--iso-hl-top)} .iso .hl .l{fill:var(--iso-hl-l)} .iso .hl .r{fill:var(--iso-hl-r)}
+.iso .nm{fill:var(--ink);font-family:var(--sans);font-weight:700;text-anchor:middle}
+.iso .hl .nm{fill:var(--iso-hl-ink)}
+.iso .note{fill:var(--muted);font-family:var(--sans);font-size:11.5px}
+.iso .ar{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3;fill:none}
+.iso .ah{fill:var(--muted)}
+.iso .dot{fill:var(--muted)}
+.hook{background:var(--accent-soft);border-color:transparent}
+.hook p{font-weight:700;font-size:15px}
+
+/* done */
+.done h2{font-size:22px;margin-bottom:6px}
+.score{font-family:var(--mono);font-size:44px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1;margin:10px 0 4px}
+.rlist{display:grid;gap:8px;margin:18px 0}
+.ritem{display:grid;grid-template-columns:1.6em 1fr auto;gap:8px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.ritem .m{font-weight:700}
+.ritem .m.ok{color:var(--ok)} .ritem .m.bad{color:var(--ng)}
+.ritem .d{font-size:12px;color:var(--muted);white-space:nowrap}
+.ritem .s{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:10px}
+
+@media (max-width:380px){ .nums b{font-size:24px} .drow{grid-template-columns:6.5em 1fr 3em} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;scroll-behavior:auto!important} }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">SAA 隙間ドリル<small>AWS SAA-C03 / 間隔反復で覚える</small></div>
+    <div class="sync" id="sync" data-s="local"><i></i><span>この端末に保存</span></div>
+  </header>
+
+  <main id="home">
+    <div class="today">
+      <div class="nums">
+        <div class="num due"><b id="nDue">0</b><span>今日の復習</span></div>
+        <div class="num"><b id="nNew">0</b><span>未出題</span></div>
+        <div class="num"><b id="nMaster">0</b><span>定着（7日以上）</span></div>
+      </div>
+      <div class="modes">
+        <button class="mode primary" id="mOne" data-mode="one"><strong>1問だけ</strong><span>約1分・信号待ちに</span></button>
+        <button class="mode" data-mode="three"><strong>3問</strong><span>約4分・お迎え前に</span></button>
+        <button class="mode" data-mode="ten"><strong>10問</strong><span>約15分・寝かしつけ後に</span></button>
+        <button class="mode" id="mRev" data-mode="review"><strong>復習だけ</strong><span id="mRevSub">期限が来た問題のみ</span></button>
+      </div>
+    </div>
+
+    <section class="block">
+      <h2>分野別の正答率 <span class="label">出題比率</span></h2>
+      <div class="dom" id="dom"></div>
+    </section>
+
+    <section class="block">
+      <h2>これから7日間の復習予定 <span class="label" id="streak"></span></h2>
+      <div class="week" id="week"></div>
+    </section>
+
+    <section class="block">
+      <h2>最近の出題傾向メモ</h2>
+      <div class="notes">
+        <p>本番は65問・130分・1000点中720点で合格。問題文は長めのシナリオで、最後の一文の条件で正解が決まります。</p>
+        <ul>
+          <li>「最もコスト効率が高い」「運用上のオーバーヘッドが最も少ない」など、<b>条件の言葉</b>で選択肢を絞る問題が中心</li>
+          <li>「2つ選択」「3つ選択」の複数選択問題が混ざる（部分点なし）</li>
+          <li>自前で作る案より、マネージド・サーバーレスの案が正解になりやすい</li>
+          <li>分野の比率はセキュア30%・耐障害性26%・高性能24%・コスト最適化20%。この比率で新しい問題を出します</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="foot">
+      <span id="stat"></span>
+      <button class="linkbtn danger" id="reset">学習記録をリセット</button>
+    </div>
+  </main>
+
+  <main id="quiz" hidden>
+    <div class="qhead">
+      <span class="chip" id="qDom"></span>
+      <span class="chip" id="qKind"></span>
+      <span class="chip multi" id="qMulti" hidden></span>
+      <span class="grow"></span>
+      <span class="mono label" id="qCount"></span>
+      <button class="quit" id="quit">やめる</button>
+    </div>
+    <div class="progress"><i id="qBar"></i></div>
+    <div id="qBody">
+      <p class="stem" id="qStem"></p>
+      <div class="opts" id="qOpts"></div>
+      <div id="qExp"></div>
+    </div>
+    <div class="actions" id="qActions"></div>
+  </main>
+
+  <main id="done" class="done" hidden>
+    <p class="label">おつかれさまでした</p>
+    <div class="score" id="dScore"></div>
+    <p id="dMsg"></p>
+    <div class="rlist" id="dList"></div>
+    <div class="actions">
+      <button class="btn sub" id="dHome">ホームへ</button>
+      <button class="btn" id="dMore">もう1問</button>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   問題データ
+   d: 1=セキュア 2=耐障害性 3=高性能 4=コスト最適化
+   a: 正解のインデックス（複数なら複数選択）
+   k: 問題文のカギになる言葉（回答後にハイライト）
+   st: ストーリー解説 / m: 立体マップ [名前, メモ, 強調] / ex: 選択肢ごとの解説 / h: 覚え方
+   ============================================================ */
+const BANK = [
+{id:"s01",d:1,
+q:"ある企業は、プライベートサブネット内の Amazon EC2 インスタンスで注文データを処理し、同じリージョンの Amazon S3 バケットに保存しています。セキュリティポリシーにより、このトラフィックはインターネットを経由してはいけません。追加コストを最小限に抑えてこの要件を満たすソリューションはどれですか。",
+o:["パブリックサブネットに NAT ゲートウェイを作成し、プライベートサブネットのルートテーブルに追加する","S3 のゲートウェイ型 VPC エンドポイントを作成し、プライベートサブネットのルートテーブルに関連付ける","EC2 インスタンスにパブリック IP を割り当て、インターネットゲートウェイ経由で S3 にアクセスする","AWS Direct Connect 接続を確立し、S3 へのトラフィックを Direct Connect 経由にする"],
+a:[1],k:["インターネットを経由してはいけません","追加コストを最小限"],
+st:"ECサイトの倉庫（プライベートサブネット）から、隣の保管庫（S3）へ荷物を運びたい。NAT ゲートウェイは「いったん公道（インターネット）に出てから保管庫に入る」ルートで、しかも通行料（データ処理料金）がかかる。ゲートウェイエンドポイントは倉庫と保管庫をつなぐ社内専用の通路。ルートテーブルに1行足すだけで開通し、通行料は無料。",
+m:[["EC2","プライベートサブネット",0],["ルートテーブル","S3宛はエンドポイントへ",0],["Gateway Endpoint","無料の専用通路",1],["S3","同じリージョン",0]],
+ex:["NAT ゲートウェイはインターネット側への出口。S3 には届くがパブリック経路になり、時間料金とデータ処理料金もかかるため要件に合わない。","正解。S3 と DynamoDB だけが使えるゲートウェイ型エンドポイントは無料で、AWS ネットワーク内で完結する。バケットポリシーの aws:SourceVpce 条件で「この通路以外からは拒否」まで絞れる。","パブリック IP とインターネットゲートウェイは、まさに禁止されているインターネット経由。","Direct Connect はオンプレミスと AWS を結ぶ専用線。VPC 内の EC2 から S3 への経路には関係なく、コストも高い。"],
+h:"S3・DynamoDB へのプライベート接続 → ゲートウェイエンドポイント（無料）。それ以外のサービス → インターフェイスエンドポイント（有料）"},
+
+{id:"s02",d:1,
+q:"あるアプリケーションは Amazon RDS for MySQL に接続するための認証情報を設定ファイルにハードコードしています。セキュリティチームは、認証情報を安全に保管し、30 日ごとに自動でローテーションすることを求めています。運用上のオーバーヘッドが最も少ないソリューションはどれですか。",
+o:["認証情報を AWS Systems Manager Parameter Store の SecureString に保存し、ローテーション用の Lambda 関数を Amazon EventBridge で 30 日ごとに実行する","認証情報を AWS Secrets Manager に保存して自動ローテーションを有効にし、アプリケーションは実行時に Secrets Manager から取得する","認証情報を AWS KMS で暗号化し、EC2 のユーザーデータに埋め込む","認証情報を暗号化した S3 バケットに保存し、IAM ポリシーでアクセスを制限する"],
+a:[1],k:["自動でローテーション","運用上のオーバーヘッドが最も少ない"],
+st:"店の合鍵（DBパスワード）を、レジ横の引き出し（設定ファイル）に入れっぱなしにしている状態。Secrets Manager は鍵の管理会社のようなもの。鍵を金庫に保管し、30日ごとに鍵穴ごと交換して、スタッフには毎回その時点の鍵を渡してくれる。RDS 用の交換手順は AWS が用意しているので、自分で作業員（Lambda）を手配する必要がない。",
+m:[["アプリ","起動時に取得",0],["Secrets Manager","保管と自動ローテーション",1],["RDS MySQL","新しいパスワードに更新",0]],
+ex:["動くが、ローテーション処理を自作して保守する必要があり、オーバーヘッドの点で負ける。Parameter Store には自動ローテーションの機能がない。","正解。RDS・Aurora・Redshift などはマネージドなローテーションがそのまま使える。「ローテーション」という言葉が出たら、まず Secrets Manager を疑う。","暗号化しても値は固定のまま。ローテーションできず、ユーザーデータは参照されやすい場所でもある。","保管はできるが、ローテーションの仕組みがない。"],
+h:"パスワードの自動ローテーション → Secrets Manager。設定値を保管するだけ → Parameter Store（安い）"},
+
+{id:"s03",d:1,
+q:"企業は Amazon S3 に保存した商品画像を Amazon CloudFront で配信しています。ユーザーが S3 の URL に直接アクセスできないようにし、CloudFront 経由のアクセスのみを許可する必要があります。どのソリューションが要件を満たしますか。",
+o:["S3 バケットを公開設定にし、AWS WAF を CloudFront に関連付ける","CloudFront のオリジンアクセスコントロール (OAC) を設定し、そのディストリビューションからのアクセスのみを許可するバケットポリシーを設定する","すべての画像に S3 の署名付き URL を発行してユーザーに配布する","S3 バケットにセキュリティグループを設定し、CloudFront の IP 範囲のみを許可する"],
+a:[1],k:["直接アクセスできないように","CloudFront 経由のアクセスのみ"],
+st:"S3 は倉庫、CloudFront は全国の店舗。お客さんには店舗で買ってほしいのに、倉庫の裏口が開いていると直接持っていかれてしまう。OAC は店舗スタッフの社員証。倉庫の入口（バケットポリシー）に「この店舗の社員証を持つ人だけ入れる」と貼っておけば、裏口からは誰も入れない。",
+m:[["ユーザー","画像を表示",0],["CloudFront","OAC で署名してリクエスト",1],["バケットポリシー","この配信だけ許可",0],["S3","パブリックアクセスはブロック",0]],
+ex:["公開バケットは直接アクセスを許してしまう。WAF は CloudFront を通る通信しか検査できない。","正解。OAC は旧方式 OAI の後継で、SSE-KMS で暗号化したオブジェクトにも対応する。S3 のブロックパブリックアクセスは有効のままでよい。","署名付き URL は一時的な個別アクセス用。直接アクセスを止める仕組みではなく、全画像に発行するのは運用が重い。","S3 にはセキュリティグループを設定できない。セキュリティグループは EC2 や ALB などのネットワークインターフェイスに付けるもの。"],
+h:"CloudFront だけに S3 を見せる → OAC ＋ バケットポリシー（古い問題集では OAI）"},
+
+{id:"s04",d:1,
+q:"ある企業は AWS Organizations で 50 のアカウントを管理しています。セキュリティ部門は、どのアカウントのどのユーザーも（アカウントの管理者を含めて）AWS CloudTrail を停止・削除できないようにしたいと考えています。最も効果的な方法はどれですか。",
+o:["各アカウントの IAM ユーザーとロールに、CloudTrail の停止を拒否する IAM ポリシーをアタッチする","組織のルートまたは OU に、cloudtrail:StopLogging と cloudtrail:DeleteTrail を拒否するサービスコントロールポリシー (SCP) をアタッチする","AWS Config ルールで CloudTrail が有効かどうかを監視する","各アカウントの管理者に IAM アクセス許可の境界を設定する"],
+a:[1],k:["50 のアカウント","管理者を含めて","できないように"],
+st:"たくさんの店舗をもつチェーン本部の「全店共通ルール」が SCP。各店舗の店長（アカウントの管理者）がどんな権限を持っていても、本部ルールで禁止された操作はできない。IAM ポリシーは店舗ごとの就業規則なので、店長が書き換えられてしまう。",
+m:[["Organizations","組織のルート",0],["SCP","OU単位で権限の上限を設定",1],["各アカウント","管理者でも拒否",0],["CloudTrail","停止・削除できない",0]],
+ex:["50アカウント分の設定が必要で、各アカウントの管理者がポリシーを外せてしまう。","正解。SCP は権限を与えるものではなく、上限を決めるガードレール。アカウント内の管理者にも効く（管理アカウント自体には効かない点も覚えておく）。","Config は「検出して知らせる」仕組み。停止そのものは防げない。","アクセス許可の境界は IAM ユーザーやロール単位の設定。全アカウントを一括で守る仕組みではない。"],
+h:"複数アカウントで「絶対に禁止」→ SCP。検出して知らせるだけ → Config"},
+
+{id:"s05",d:1,
+q:"EC サイトが Application Load Balancer (ALB) の背後で稼働しています。最近、SQL インジェクションを狙ったリクエストと、特定の IP アドレスからの大量のリクエストが観測されました。アプリケーションのコードを変更せずに、これらをブロックするにはどうすればよいですか。",
+o:["AWS Shield Standard を有効にする","Amazon GuardDuty を有効にして脅威を検出する","ALB に AWS WAF のウェブ ACL を関連付け、SQL インジェクション用のマネージドルールとレートベースのルールを追加する","Amazon Inspector で EC2 インスタンスの脆弱性をスキャンする"],
+a:[2],k:["SQL インジェクション","大量のリクエスト","ブロック"],
+st:"WAF は店の入口に立つ警備員。怪しい文字列（SQL インジェクション）を持った客や、同じ人が1分間に何百回も出入りするのを見つけたら入店を断る。GuardDuty は防犯カメラの録画を見て「怪しい人がいました」と教えてくれる係、Inspector は店の設備点検係。止めてくれるのは警備員だけ。",
+m:[["攻撃者","SQLi・大量アクセス",0],["AWS WAF","マネージドルールとレート制限",1],["ALB","正常な通信だけ通す",0],["EC2","コード変更なし",0]],
+ex:["Shield Standard はネットワーク層（L3/L4）の DDoS 対策で、全ユーザーに自動で有効。アプリ層の SQL インジェクションは防げない。","GuardDuty はログから脅威を検出するサービス。リクエストのブロックはしない。","正解。WAF は ALB・CloudFront・API Gateway などに付けられる L7 のファイアウォール。レートベースルールで IP ごとのリクエスト数を制限できる。","Inspector は EC2・コンテナイメージ・Lambda の脆弱性スキャン。通信のブロックはしない。"],
+h:"L7 の攻撃（SQLi・XSS・レート制限）→ WAF。L3/L4 の DDoS → Shield"},
+
+{id:"s06",d:1,
+q:"企業は数百の S3 バケットに顧客データを保存しています。コンプライアンス要件により、クレジットカード番号などの個人情報 (PII) を含むオブジェクトを自動で検出し、レポートする必要があります。どのサービスを使用すべきですか。",
+o:["Amazon GuardDuty","Amazon Macie","Amazon Inspector","Amazon Detective"],
+a:[1],k:["S3 バケット","個人情報 (PII)","自動で検出"],
+st:"倉庫（S3）に何百もの段ボールがあって、どれにお客様の住所やカード番号の紙が紛れているか分からない。Macie は機械学習で箱の中身を読み、「この箱に個人情報があります」と付箋を貼ってくれる係。",
+m:[["S3 バケット群","数百のバケット",0],["Amazon Macie","機械学習で PII を検出",1],["Security Hub","検出結果を集約・通知",0]],
+ex:["GuardDuty は CloudTrail・VPC フローログ・DNS ログなどから不審な挙動を検出する。データの中身は見ない。","正解。Macie は S3 内の機密データ（PII や認証情報など）を検出するサービス。「S3 ＋ 機密データの検出」なら Macie。","Inspector はソフトウェアの脆弱性やネットワーク到達性の評価。","Detective はログを関連付けてセキュリティ調査を助けるサービス。検出後の原因調査に使う。"],
+h:"Macie = S3 の中の個人情報。GuardDuty = 不審な動き。Inspector = 脆弱性。Detective = 調査"},
+
+{id:"s07",d:1,
+q:"企業は S3 に保存するデータを暗号化する必要があります。要件は、暗号化キーの使用履歴を監査できること、キーを自社で無効化できること、キーのローテーションを管理できることです。運用上のオーバーヘッドを最小限にしつつ要件を満たす方法はどれですか。",
+o:["Amazon S3 マネージドキーによるサーバー側の暗号化 (SSE-S3) を使用する","AWS KMS のカスタマーマネージドキーによるサーバー側の暗号化 (SSE-KMS) を使用する","顧客提供キーによるサーバー側の暗号化 (SSE-C) を使用し、キーをオンプレミスで管理する","アプリケーション側で暗号化し、キーをソースコードに埋め込む"],
+a:[1],k:["使用履歴を監査","自社で無効化","運用上のオーバーヘッドを最小限"],
+st:"SSE-S3 は、マンションの管理人が鍵を全部管理してくれる状態。安心だけれど、いつ誰が鍵を使ったかは住人には見えない。SSE-KMS のカスタマーマネージドキーは、自分名義の鍵を管理会社に預ける形。利用記録は CloudTrail に残り、自分で鍵を止めたり交換の周期を決めたりできる。SSE-C は鍵を毎回自分で持っていく方式なので手間が大きい。",
+m:[["S3","SSE-KMS で保存",0],["KMS カスタマー管理キー","無効化・ローテーション",1],["CloudTrail","キーの使用を記録",0]],
+ex:["キーは AWS が管理するため、使用履歴の監査やキーの無効化はできない。","正解。カスタマーマネージドキーは、キーポリシーでのアクセス制御、CloudTrail での監査、有効化・無効化、自動ローテーションができる。","要件は満たせるが、キーの保管と受け渡しを自社で行う必要があり、オーバーヘッドが大きい。キーを失うとデータを復号できない。","ソースコードへのキーの埋め込みは、最も避けるべき方法。"],
+h:"監査・無効化・自社管理 → SSE-KMS（カスタマーマネージドキー）。何も管理したくない → SSE-S3"},
+
+{id:"s08",d:1,
+q:"EC2 インスタンス上のアプリケーションが Amazon DynamoDB のテーブルを読み書きする必要があります。AWS のセキュリティのベストプラクティスに沿って、アプリケーションに認証情報を提供する方法はどれですか。",
+o:["IAM ユーザーのアクセスキーを作成し、インスタンスの環境変数に設定する","必要な権限だけを持つ IAM ロールを作成し、インスタンスプロファイルとして EC2 にアタッチする","ルートユーザーのアクセスキーをアプリケーションの設定ファイルに保存する","アクセスキーを S3 バケットに保存し、起動時にダウンロードする"],
+a:[1],k:["EC2 インスタンス上","ベストプラクティス"],
+st:"アルバイトさん（EC2）に倉庫の合鍵を持ち歩かせると、落としたら終わり。IAM ロールは、出勤するたびに受付でその日だけ有効な入館証を自動で発行する仕組み。入館証は自動で更新されるので、鍵を管理する仕事そのものがなくなる。",
+m:[["EC2","インスタンスプロファイル",0],["IAM ロール","一時的な認証情報を自動発行",1],["DynamoDB","必要最小限の権限",0]],
+ex:["長期的なアクセスキーは漏えいのリスクが高く、ローテーションの手間もかかる。","正解。ロールは STS による一時的な認証情報を自動でローテーションして提供する。AWS SDK は自動でそれを使う。","ルートユーザーのアクセスキーは作らないのが原則。最悪の選択肢。","長期キーの置き場所が変わっただけで、根本的な問題は同じ。"],
+h:"AWS のサービスに権限を渡す → IAM ロール。アクセスキーを配る選択肢はほぼ不正解"},
+
+{id:"s09",d:1,
+q:"企業には 20 の AWS アカウントがあり、従業員は既存の Microsoft Entra ID（旧 Azure AD）の認証情報で各アカウントにシングルサインオンしたいと考えています。アクセスを一元管理でき、運用上の負荷が最も少ないソリューションはどれですか。",
+o:["各アカウントに従業員ごとの IAM ユーザーを作成する","AWS IAM Identity Center を有効にし、Entra ID を外部 ID プロバイダーとして接続して、アカウントごとにアクセス許可セットを割り当てる","Amazon Cognito ユーザープールを作成し、従業員を登録する","1 つの IAM ユーザーの認証情報を従業員で共有する"],
+a:[1],k:["20 の AWS アカウント","シングルサインオン","一元管理"],
+st:"チェーン店20店舗それぞれで社員カードを作るのは大変。IAM Identity Center は、本社の社員証1枚で全店舗に入れるゲート。社員名簿（Entra ID）は今あるものをそのまま使い、「この人はA店では店長、B店では閲覧だけ」という権限のセットを割り当てる。",
+m:[["従業員","いつもの ID でログイン",0],["Entra ID","外部 ID プロバイダー",0],["IAM Identity Center","アクセス許可セット",1],["20 アカウント","ロールで一時アクセス",0]],
+ex:["20アカウント × 従業員数の IAM ユーザー管理は負荷が大きく、シングルサインオンにもならない。","正解。Organizations 配下の複数アカウントへの従業員のシングルサインオンは IAM Identity Center（旧 AWS SSO）が定番。","Cognito は主にアプリを使う「お客様」向けの認証サービス。従業員が AWS アカウントに入るためのものではない。","認証情報の共有は、誰が何をしたか追跡できず、ベストプラクティスに反する。"],
+h:"従業員 → 複数の AWS アカウント → IAM Identity Center。アプリのお客様 → Cognito"},
+
+{id:"s10",d:1,
+q:"あるサブネット内の EC2 インスタンス群に対して、特定の IP アドレス範囲からの不正なアクセスが続いています。ロードバランサーは使用していません。この IP アドレス範囲からのトラフィックを、サブネット単位で拒否するにはどうすればよいですか。",
+o:["セキュリティグループに、その IP 範囲を拒否するインバウンドルールを追加する","サブネットのネットワーク ACL に、その IP 範囲を拒否するインバウンドルールを、許可ルールより小さいルール番号で追加する","ルートテーブルに、その IP 範囲をブラックホールとして追加する","Amazon GuardDuty を有効にする"],
+a:[1],k:["拒否","サブネット単位"],
+st:"セキュリティグループは部屋ごとの招待客リスト。リストに載っている人だけ入れる方式で、「この人はお断り」とは書けない。ネットワーク ACL はフロア入口の警備で、「この人たちは通さない」と書ける。番号の小さいルールから順に見ていくので、お断りのルールを先に置く。",
+m:[["攻撃元 IP","特定の CIDR",0],["ネットワーク ACL","サブネットの境界で拒否",1],["セキュリティグループ","インスタンス単位で許可のみ",0],["EC2","サブネット内",0]],
+ex:["セキュリティグループには許可ルールしかない。拒否ルールは書けない。","正解。NACL はステートレスで、許可と拒否の両方を書け、ルール番号の小さい順に評価される。","ルートテーブルは送信先の経路を決めるもの。送信元を基準に受信を止めることはできない。","GuardDuty は検出するだけで、ブロックはしない。"],
+h:"「拒否したい」→ NACL（ALB などの前なら WAF の IP セット）。セキュリティグループは許可だけ・ステートフル"},
+
+{id:"s11",d:1,
+q:"企業は Amazon RDS for PostgreSQL に機密データを保存する予定です。保存データと転送中のデータの両方を暗号化する必要があります。要件を満たすために必要な手順はどれですか。（2 つ選択）",
+o:["DB インスタンスの作成時に、AWS KMS キーを使用した暗号化を有効にする","パラメータグループで rds.force_ssl を有効にし、クライアントから SSL/TLS で接続する","DB インスタンスをパブリックサブネットに配置する","マルチ AZ 配置を有効にする","AWS Security Hub を有効にする"],
+a:[0,1],k:["保存データ","転送中のデータ","2 つ選択"],
+st:"保存データの暗号化は金庫にしまうこと、転送中の暗号化は現金輸送車で運ぶこと。どちらか片方では足りない。RDS の金庫は後から取り付けられない点に注意。暗号化していない DB は、スナップショットを暗号化付きでコピーしてから、そこから復元し直す。",
+m:[["アプリ","SSL/TLS で接続",0],["転送中の暗号化","rds.force_ssl を有効",1],["RDS PostgreSQL","KMS で保存時暗号化",1],["スナップショット","自動で暗号化される",0]],
+ex:["正解（保存時）。作成時に有効にすると、ストレージ・自動バックアップ・スナップショット・リードレプリカがすべて暗号化される。","正解（転送中）。SSL/TLS を強制して、暗号化されていない接続を拒否できる。","パブリックサブネットに置いても暗号化にはならず、露出が増えるだけ。","マルチ AZ は可用性のための機能で、暗号化とは関係ない。","Security Hub は設定の評価と検出結果の集約をするサービス。暗号化はしない。"],
+h:"保存時は「作成時に KMS」、転送中は「SSL/TLS を強制」。既存 DB の暗号化はスナップショットのコピー経由"},
+
+{id:"r01",d:2,
+q:"EC サイトでは、セール開始直後に注文が急増し、注文処理を行う EC2 インスタンスが処理しきれずに注文が失われることがあります。注文を失わず、負荷に応じて処理能力を拡張できる設計はどれですか。",
+o:["注文処理用の EC2 インスタンスを、より大きいインスタンスタイプに変更する","ウェブ層と注文処理層の間に Amazon SQS キューを置き、キュー内のメッセージ数に応じて注文処理層の Auto Scaling グループをスケールさせる","ウェブ層から Amazon SNS トピックに注文を発行し、注文処理層が直接サブスクライブする","注文データを EC2 のインスタンスストアに一時保存する"],
+a:[1],k:["注文が急増","注文を失わず","負荷に応じて"],
+st:"セール初日のレジに客が殺到すると、店員が対応しきれず帰ってしまう客が出る。SQS は整理券の発行機。客（注文）は整理券を取って待合室（キュー）で待ってくれるので、誰も帰らない。待合室の人数を見て、店長（Auto Scaling）がレジ係を増やしたり減らしたりする。",
+m:[["ウェブ層","注文を受け付け",0],["Amazon SQS","注文をためておく（最大14日）",1],["Auto Scaling","キューの長さでスケール",0],["注文処理 EC2","処理したら削除",0]],
+ex:["スケールアップには上限があり、ピーク時に注文が失われる問題は解決しない。","正解。SQS で疎結合にするとピークを吸収でき、キュー内のメッセージ数（または1台あたりの滞留数）を指標にスケールできる。","SNS は届けたら終わりのプッシュ型で、受け手が処理できないときにためておけない。ためるにはキューが必要。","インスタンスストアはインスタンスを停止すると消える一時領域。注文を失うリスクが増える。"],
+h:"「急増」「失わない」「疎結合」→ 間に SQS。スケールの指標はキューの長さ"},
+
+{id:"r02",d:2,
+q:"決済システムでは、同じ注文に関するイベント（作成・支払い・キャンセル）を、発生した順番どおりに 1 回だけ処理する必要があります。どの構成を使用すべきですか。",
+o:["Amazon SQS 標準キュー","Amazon SQS FIFO キューを使用し、注文 ID をメッセージグループ ID に設定する","Amazon SNS 標準トピック","Amazon EventBridge のデフォルトイベントバス"],
+a:[1],k:["順番どおり","1 回だけ"],
+st:"「注文作成」より先に「キャンセル」が届いたら大混乱。FIFO キューは一列に並ぶ窓口。同じ注文 ID（メッセージグループ）のイベントは必ず順番どおりに、重複なしで処理される。注文が違えば別の列で同時に処理できるので、速さも保てる。",
+m:[["注文イベント","作成→支払い→キャンセル",0],["SQS FIFO","グループIDごとに順序保証",1],["決済処理","1回だけ処理",0]],
+ex:["標準キューは「少なくとも1回」の配信で、順番はベストエフォート。重複や順番の入れ替わりが起こりうる。","正解。FIFO キューは順序の保証と重複排除を提供する。順序はメッセージグループ ID ごとに守られる。","SNS 標準トピックは、順序も1回限りも保証しない。","EventBridge は順序を保証しない。"],
+h:"「順番どおり」「重複なし」→ FIFO キュー。並列処理はメッセージグループ ID で確保"},
+
+{id:"r03",d:2,
+q:"企業の本番データベースは、単一の Amazon RDS for MySQL インスタンスで稼働しています。アベイラビリティーゾーン (AZ) の障害時にも、手動操作なしで自動的にフェイルオーバーする構成にしたいと考えています。どうすればよいですか。",
+o:["同じ AZ にリードレプリカを作成する","RDS のマルチ AZ 配置を有効にする","1 時間ごとに手動でスナップショットを取得する","より大きな DB インスタンスクラスに変更する"],
+a:[1],k:["AZ の障害","手動操作なしで","自動的にフェイルオーバー"],
+st:"本店の隣町（別の AZ）に、常に同じ在庫をリアルタイムで持つ控えの店を用意しておくのがマルチ AZ。本店が停電したら、お客さんの案内先（DNS のエンドポイント）が自動で控えの店に切り替わる。お客さんは同じ住所を訪ねるだけでいい。",
+m:[["アプリ","同じエンドポイントに接続",0],["プライマリ","AZ-a",0],["同期レプリケーション","データを常に複製",1],["スタンバイ","AZ-c・自動で昇格",0]],
+ex:["同じ AZ では AZ 障害に耐えられない。リードレプリカは非同期で、自動フェイルオーバーもしない（手動で昇格させる）。","正解。マルチ AZ はスタンバイへ同期レプリケーションし、障害時は通常 1〜2 分で自動フェイルオーバーする。","スナップショットからの復元は手動で時間がかかり、直近のデータも失われる。","性能は上がるが、可用性は変わらない。"],
+h:"高可用性・自動フェイルオーバー → マルチ AZ（同期）。読み取り性能 → リードレプリカ（非同期）"},
+
+{id:"r04",d:2,
+q:"グローバルに展開する EC サイトは Amazon Aurora MySQL を使用しています。リージョン全体の障害に備えて、RPO を 1 秒程度、RTO を 1 分程度にする必要があります。どのソリューションが最適ですか。",
+o:["別のリージョンへ自動スナップショットを定期的にコピーする","Aurora Global Database を構成し、セカンダリリージョンにクラスターを配置する","同じリージョンに Aurora レプリカを追加する","AWS DMS で別のリージョンの RDS へ継続的に複製する"],
+a:[1],k:["リージョン全体の障害","RPO を 1 秒程度","RTO を 1 分程度"],
+st:"東京の本店が丸ごと使えなくなったとき、大阪の支店がほぼ同じ帳簿（遅れは1秒ほど）を持っていて、1分ほどで本店の役割を引き継げる。それが Aurora Global Database。専用の仕組みでストレージごと複製しているので、遅れがとても小さい。",
+m:[["プライマリリージョン","読み書き",0],["ストレージレベルの複製","遅延は通常1秒未満",1],["セカンダリリージョン","読み取りと昇格",0]],
+ex:["スナップショットの間隔分だけデータが失われ、復元にも時間がかかる。RPO も RTO も満たせない。","正解。Global Database はレプリケーションの遅延が通常 1 秒未満で、リージョン障害時は 1 分程度で切り替えられる。","同じリージョン内のレプリカでは、リージョン障害に耐えられない。","動作はするが、秒単位の RPO と分単位の RTO を安定して満たす構成としては Global Database に劣り、運用も複雑。"],
+h:"Aurora でリージョンをまたぐ DR・秒単位の RPO → Aurora Global Database"},
+
+{id:"r05",d:2,
+q:"企業は災害対策 (DR) を計画しています。要件は RTO が数十分、RPO が数分で、コストはできるだけ抑えたいとのことです。データベースは DR リージョンへ常時レプリケーションし、アプリケーションサーバーは災害時にのみ起動する構成を検討しています。この DR 戦略はどれですか。",
+o:["バックアップと復元","パイロットライト","ウォームスタンバイ","マルチサイト（アクティブ/アクティブ）"],
+a:[1],k:["RTO が数十分","コストはできるだけ抑えたい","災害時にのみ起動"],
+st:"ガスコンロの種火（パイロットライト）だけは常に点けておき、料理するときに一気に火を大きくするイメージ。種火はデータベースの常時レプリケーション。アプリサーバーには火を点けていないので安い。ウォームスタンバイは弱火でずっと調理している状態、マルチサイトは両方のコンロで全力調理している状態。",
+m:[["バックアップと復元","RTO 数時間・最安",0],["パイロットライト","DB だけ常時稼働",1],["ウォームスタンバイ","縮小版が常時稼働",0],["マルチサイト","フル稼働・最高コスト",0]],
+ex:["バックアップからの復元は RTO・RPO が数時間になりがち。「常時レプリケーション」とも一致しない。","正解。中心となる DB だけ最新に保ち、アプリ層は AMI や IaC で災害時に起動する。コストと復旧速度のバランス型。","ウォームスタンバイは縮小版の環境全体が常時動いている方式。アプリサーバーも動いているので、設問の構成より高い。","両リージョンでフル稼働する最も高価な方式。RTO はほぼゼロだが、コストの要件に合わない。"],
+h:"安い順：バックアップと復元 → パイロットライト（DB だけ）→ ウォームスタンバイ（縮小版）→ マルチサイト"},
+
+{id:"r06",d:2,
+q:"企業のウェブサイトは us-east-1 の ALB で稼働しています。ALB が正常でない場合は、Amazon S3 でホストしている静的なメンテナンスページにトラフィックを自動で切り替えたいと考えています。Amazon Route 53 のどのルーティングポリシーを使用すべきですか。",
+o:["シンプルルーティング","加重ルーティング","ヘルスチェック付きのフェイルオーバールーティング","位置情報ルーティング"],
+a:[2],k:["正常でない場合","自動で切り替え"],
+st:"お店の案内係（Route 53）が数十秒おきに本店へ電話（ヘルスチェック）して、出なければ「本日は臨時の案内所へどうぞ」とお客さんを別の場所へ案内する。これがフェイルオーバールーティング。プライマリとセカンダリを決めておくだけ。",
+m:[["ユーザー","example.com",0],["Route 53","フェイルオーバーとヘルスチェック",1],["プライマリ：ALB","正常なとき",0],["セカンダリ：S3","メンテナンスページ",0]],
+ex:["シンプルルーティングは、ヘルスチェックによる切り替えができない。","加重ルーティングは割合でトラフィックを分けるもの（新バージョンを少しずつ出すときなど）。","正解。プライマリがヘルスチェックに失敗すると、セカンダリ（S3 の静的サイトなど）へ自動で切り替わる。","位置情報ルーティングはユーザーの場所で振り分けるもので、障害対応が目的ではない。"],
+h:"障害時に切り替え → フェイルオーバー。割合 → 加重。近い所 → レイテンシー。国・地域 → 位置情報"},
+
+{id:"r07",d:2,
+q:"Auto Scaling グループ内の EC2 インスタンスでウェブアプリケーションが稼働しており、ユーザーのセッション情報は各インスタンスのメモリに保存されています。スケールインのたびにユーザーがログアウトされてしまいます。最適な改善策はどれですか。",
+o:["ALB のスティッキーセッションを有効にする","セッション情報を Amazon ElastiCache (Redis OSS) に保存するようにアプリケーションを変更する","セッション情報を各インスタンスの EBS ボリュームに保存する","スケールインを無効にする"],
+a:[1],k:["セッション情報","スケールインのたびに","ログアウト"],
+st:"お客さんのカートの中身を担当店員の頭の中だけで覚えていたら、その店員が帰った瞬間に消えてしまう。共有のメモ帳（ElastiCache）に書いておけば、どの店員が対応しても続きから接客できる。サーバーをいつ入れ替えても困らない状態にすることを、ステートレス化と呼ぶ。",
+m:[["ALB","どのインスタンスにも振り分け",0],["EC2 × 複数","ステートレス",0],["ElastiCache","セッションを共有保存",1]],
+ex:["スティッキーセッションは同じインスタンスに振り分け続けるだけ。そのインスタンスが消えればセッションも消える。","正解。セッションを外部の共有ストア（ElastiCache や DynamoDB）に置けば、インスタンスが入れ替わってもセッションが残る。","EBS は基本的に1つのインスタンスに接続するもので、他のインスタンスと共有できない。","コストが増えるうえ、障害で落ちたインスタンスのセッションは結局失われる。"],
+h:"セッションが消える → 外部に保存（ElastiCache / DynamoDB）＝ ステートレス化"},
+
+{id:"r08",d:2,
+q:"複数の AZ に分散した Linux の EC2 インスタンスから、同じファイルを同時に読み書きできる共有ファイルストレージが必要です。容量は予測できないため、自動で拡張・縮小してほしいと考えています。どのサービスが最適ですか。",
+o:["Amazon EBS マルチアタッチ","Amazon EFS","Amazon S3 をマウントして使う","インスタンスストア"],
+a:[1],k:["複数の AZ","Linux","同時に読み書き","自動で拡張"],
+st:"EBS は各店員の手元の引き出し。EFS は、どの支店からも使える共有キャビネットで、書類が増えると勝手に大きくなる。Windows の店なら FSx for Windows File Server という別のキャビネットを使う。",
+m:[["EC2（AZ-a）","NFS でマウント",0],["EC2（AZ-c）","NFS でマウント",0],["Amazon EFS","マルチ AZ・自動で伸縮",1]],
+ex:["マルチアタッチは io1/io2 限定で、同じ AZ 内でしか使えない。クラスター対応のファイルシステムも必要で、要件を満たさない。","正解。EFS は NFS ベースで、複数の AZ にある多数のインスタンスから同時にアクセスでき、容量は自動で伸縮する。","S3 はオブジェクトストレージ。ファイルシステムとしての同時書き込みやロックには向かない。","インスタンスストアはそのインスタンス専用の一時ストレージで、共有できない。"],
+h:"Linux の共有 → EFS。Windows の共有 → FSx for Windows。高性能計算 → FSx for Lustre"},
+
+{id:"r09",d:2,
+q:"ウェブアプリケーションを高可用性にしたいと考えています。単一の AZ に障害が発生しても稼働を続け、応答しなくなったインスタンスは自動で置き換える必要があります。要件を満たす組み合わせはどれですか。（2 つ選択）",
+o:["Auto Scaling グループを 2 つ以上の AZ にまたがるように構成する","ALB の背後にインスタンスを配置し、Auto Scaling グループのヘルスチェックタイプを ELB にする","1 台の大きなインスタンスに Elastic IP アドレスを割り当てる","すべてのインスタンスをクラスタープレイスメントグループに配置する","インスタンスの自動復旧 (auto recovery) だけを有効にする"],
+a:[0,1],k:["単一の AZ に障害","自動で置き換える","2 つ選択"],
+st:"支店を2つの町（AZ）に分けて出しておけば、片方の町が停電しても営業できる。さらに店長（Auto Scaling）が、入口の受付（ALB）から「このレジ、反応がありません」と報告を受けたら、そのレジ係を交代させる。ヘルスチェックタイプを ELB にするのは、この報告を受け取るため。",
+m:[["ALB","ヘルスチェック",0],["Auto Scaling","ELB ヘルスチェックで置き換え",1],["EC2（AZ-a）","",0],["EC2（AZ-c）","",0]],
+ex:["正解。複数の AZ にまたがることで AZ 障害に耐える。","正解。ELB ヘルスチェックにすると、アプリが応答しないインスタンスも異常と判定されて置き換えられる（EC2 ヘルスチェックだけではハードウェアの障害しか分からない）。","単一のインスタンスは単一障害点になる。","クラスタープレイスメントグループは1つの AZ 内に密集して配置する低レイテンシー用の仕組み。可用性はむしろ下がる。","自動復旧は同じ AZ 内での復旧で、AZ 障害には対応しない。"],
+h:"高可用性の定番 = ALB ＋ マルチ AZ の Auto Scaling ＋ ELB ヘルスチェック"},
+
+{id:"r10",d:2,
+q:"注文が確定すると、在庫システム・メール送信・分析基盤の 3 つのシステムがそれぞれ独立して同じ注文イベントを処理する必要があります。1 つのシステムが停止しても他に影響せず、停止中のイベントも後から処理できるようにしたいと考えています。どの設計が最適ですか。",
+o:["1 つの SQS キューに注文を送り、3 つのシステムがそれぞれポーリングする","Amazon SNS トピックに注文を発行し、システムごとの SQS キューをサブスクライブさせる（ファンアウト）","注文アプリケーションから 3 つのシステムの API を順番に直接呼び出す","注文を S3 に保存し、各システムが 1 日 1 回バッチで読み込む"],
+a:[1],k:["それぞれ独立して","他に影響せず","後から処理"],
+st:"新しい注文のお知らせを、3つの部署の郵便受けに同時にコピーして投函するのがファンアウト。SNS がコピー機、各部署の SQS が郵便受け。在庫の部署がお休みでも郵便受けに手紙はたまるので、出社したら処理できる。",
+m:[["注文サービス","イベントを1回発行",0],["Amazon SNS","ファンアウト",1],["SQS × 3","在庫 / メール / 分析",0],["各システム","自分のペースで処理",0]],
+ex:["1つのキューでは、あるシステムが受け取って削除したメッセージは他のシステムに届かない。","正解。SNS ＋ SQS のファンアウトで、各システムが自分専用のキューを持ち、停止中もメッセージが保持される。","密結合になり、1つの API が落ちると全体に影響する。","リアルタイム性がなく、「独立して処理する」要件にも弱い。"],
+h:"1つのイベントを複数に配る＋取りこぼさない → SNS → SQS のファンアウト"},
+
+{id:"p01",d:3,
+q:"東京リージョンでホストしている EC サイトについて、北米と欧州のユーザーから「画像や CSS の表示が遅い」という声が届いています。アプリケーションの構成を大きく変えずに、世界各地での表示速度を改善する方法はどれですか。",
+o:["EC2 インスタンスのサイズを大きくする","Amazon CloudFront ディストリビューションを作成し、静的コンテンツをエッジロケーションでキャッシュする","S3 クロスリージョンレプリケーションで全リージョンにコピーする","ALB を追加する"],
+a:[1],k:["北米と欧州","画像や CSS","構成を大きく変えずに"],
+st:"毎回日本の本店まで商品を取りに来てもらうのではなく、世界中のコンビニ（エッジロケーション）に人気商品を置いておく。それが CloudFront。一度取り寄せた商品は近くのコンビニに在庫（キャッシュ）されるので、2人目からはすぐに手に入る。",
+m:[["北米・欧州のユーザー","近くのエッジへ",0],["CloudFront","エッジでキャッシュ",1],["オリジン","東京の ALB / S3",0]],
+ex:["サーバーを大きくしても、物理的な距離による遅延は減らない。","正解。CloudFront は世界中の拠点でキャッシュし、動的コンテンツも AWS のネットワーク経由で高速化できる。","コピーしても、ユーザーを最寄りのリージョンへ振り分ける仕組みが別に必要で、運用も重い。","ALB は同じリージョン内での負荷分散。距離の問題は解決しない。"],
+h:"世界中で「表示が遅い」・静的コンテンツ → CloudFront"},
+
+{id:"p02",d:3,
+q:"オンラインゲーム企業は、UDP を使用するゲームサーバーを複数のリージョンで運用しています。プレイヤーには固定の IP アドレスを提供し、最も近い正常なリージョンへ低レイテンシーでルーティングし、リージョン障害時は数秒で切り替えたいと考えています。どのサービスを使用すべきですか。",
+o:["Amazon CloudFront","AWS Global Accelerator","Route 53 のレイテンシーベースルーティング","各リージョンの Network Load Balancer のみ"],
+a:[1],k:["UDP","固定の IP アドレス","数秒で切り替え"],
+st:"Global Accelerator は世界共通の電話番号のようなもの。どこから電話しても、一番近い AWS の入口から専用の高速道路（AWS のネットワーク）に乗り、今つながる最寄りの支店に転送される。DNS のように住所録の更新待ち（TTL）がないので、切り替えが速い。",
+m:[["プレイヤー","固定のエニーキャスト IP",0],["Global Accelerator","最寄りのエッジから AWS 網へ",1],["NLB（各リージョン）","UDP のゲームサーバー",0]],
+ex:["CloudFront は HTTP/HTTPS のキャッシュ配信が得意。UDP のゲーム通信には向かない。","正解。TCP/UDP に対応し、固定 IP を2つ提供し、ヘルスチェックで素早く切り替える。「HTTP 以外」「固定 IP」がキーワード。","DNS ベースなので、クライアントのキャッシュ（TTL）の影響で切り替えに時間がかかる。固定 IP も提供しない。","NLB はリージョン内の負荷分散。リージョンをまたぐルーティングはできない。"],
+h:"HTTP のキャッシュ → CloudFront。UDP/TCP・固定 IP・素早い切り替え → Global Accelerator"},
+
+{id:"p03",d:3,
+q:"Amazon DynamoDB を使用する商品カタログ API は読み取りが非常に多く、ピーク時にはマイクロ秒単位の応答時間が求められています。アプリケーションの変更を最小限にして読み取り性能を上げる方法はどれですか。",
+o:["DynamoDB の前に Amazon ElastiCache を配置し、キャッシュのロジックを実装する","DynamoDB Accelerator (DAX) クラスターを作成し、DAX クライアントを使用する","読み込みキャパシティーユニットを増やす","DynamoDB グローバルテーブルを有効にする"],
+a:[1],k:["DynamoDB","マイクロ秒","変更を最小限"],
+st:"DynamoDB はもともと数ミリ秒で答えてくれる倉庫番。DAX は倉庫番のすぐ横に置いた「よく聞かれる商品のメモ帳」で、マイクロ秒で答えられる。DynamoDB と同じ言葉（互換の API）で話せるので、アプリはクライアントを差し替えるだけで済む。",
+m:[["商品カタログ API","DAX クライアント",0],["DAX","メモリ上のキャッシュ（µs）",1],["DynamoDB","ミリ秒",0]],
+ex:["効果はあるが、キャッシュの読み書きのロジックをアプリに実装する必要があり、変更が大きい。","正解。DAX は DynamoDB 専用のフルマネージドなキャッシュで、API に互換性がある。読み取りがマイクロ秒単位になる。","処理できる量は増えるが、応答時間は1桁ミリ秒のまま。","複数リージョンでの可用性のための機能。同じリージョン内の応答時間は変わらない。"],
+h:"DynamoDB × マイクロ秒 → DAX。RDS の前のキャッシュ → ElastiCache"},
+
+{id:"p04",d:3,
+q:"RDS for MySQL で稼働する EC サイトのデータベースで、マーケティング部門の集計クエリがプライマリの性能を低下させています。注文処理への影響をなくすための最も適切な方法はどれですか。",
+o:["マルチ AZ を有効にし、スタンバイに集計クエリを送る","リードレプリカを作成し、集計クエリをリードレプリカのエンドポイントに向ける","ストレージ容量を増やす","集計クエリの実行を夜間だけに制限する"],
+a:[1],k:["集計クエリ","プライマリの性能を低下","影響をなくす"],
+st:"レジ（プライマリ）で会計しながら、同じレジで売上の集計までやっていたら行列ができる。リードレプリカは閲覧専用のコピー帳簿。集計チームはコピーを見て作業すれば、レジは会計に集中できる。",
+m:[["注文処理","書き込み",0],["プライマリ","非同期で複製",0],["リードレプリカ","集計クエリ専用",1],["マーケティング","読み取りのみ",0]],
+ex:["従来型のマルチ AZ（DB インスタンス）のスタンバイは読み取りに使えない。マルチ AZ は可用性のための機能。","正解。読み取りの負荷を分けるにはリードレプリカ。最大 15 個まで作れて、別のリージョンにも置ける。","ストレージ容量を増やしても、クエリの負荷の問題は解決しない。","業務のほうを変える回避策で、根本的な解決ではない。"],
+h:"読み取りを分けたい → リードレプリカ（非同期）。落ちたくない → マルチ AZ（同期）"},
+
+{id:"p05",d:3,
+q:"EC サイトのクリックストリームデータをリアルタイムに収集し、レコメンドエンジンと不正検知の 2 つのアプリケーションが同じデータを並行して処理する必要があります。障害時には過去のデータを再処理（リプレイ）できることも必要です。どのサービスが最適ですか。",
+o:["Amazon SQS 標準キュー","Amazon Kinesis Data Streams","Amazon SNS","S3 に保存して 1 時間ごとにバッチ処理する"],
+a:[1],k:["リアルタイム","2 つのアプリケーション","リプレイ"],
+st:"SQS は読んだら捨てる手紙。Kinesis Data Streams は録画し続ける監視カメラ。映像（データ）は保持期間中ずっと残っているので、複数の人が同時に見られるし、巻き戻して見直す（リプレイ）こともできる。",
+m:[["クリックストリーム","毎秒大量",0],["Kinesis Data Streams","シャードに保持（最大365日）",1],["レコメンド","読み手 1",0],["不正検知","読み手 2",0]],
+ex:["SQS は処理したメッセージを削除するため、複数のアプリで同じデータを読むことも、リプレイもできない。","正解。複数の読み手が同じストリームを独立して読み、保持期間内なら好きな位置から再処理できる。","SNS はデータを保持しないため、リプレイできない。","リアルタイムの要件を満たさない。"],
+h:"リアルタイム＋複数の読み手＋リプレイ → Kinesis Data Streams。S3 に流し込むだけ → Data Firehose"},
+
+{id:"p06",d:3,
+q:"企業はアプリケーションログをほぼリアルタイムで Amazon S3 に配信し、Parquet 形式に変換して分析に使いたいと考えています。サーバーの管理は避けたく、運用上のオーバーヘッドを最小限にしたいと考えています。どのソリューションが最適ですか。",
+o:["Kinesis Data Streams と、EC2 上で動作するカスタムコンシューマーで S3 に書き込む","Amazon Data Firehose を使用し、形式変換を有効にして S3 に配信する","SQS キューに送り、Lambda でまとめて S3 に書き込む","ログを EBS に保存し、cron で S3 にコピーする"],
+a:[1],k:["ほぼリアルタイム","S3 に配信","サーバーの管理は避けたく"],
+st:"Data Firehose は、流れてくる荷物をまとめて梱包し、指定の倉庫（S3・Redshift・OpenSearch など）に届けてくれる配送サービス。途中で梱包の形式を Parquet に変えるのもおまかせ。トラックもドライバーも自分で用意しなくていい。",
+m:[["アプリログ","ストリーミング",0],["Data Firehose","ためて Parquet に変換",1],["S3","Athena で分析",0]],
+ex:["EC2 のコンシューマーを自分で管理する必要があり、オーバーヘッドが大きい。","正解。Firehose はフルマネージドで、一定量ためる処理・圧縮・形式変換（JSON → Parquet/ORC）・配信まで行う。「ほぼリアルタイム」は Firehose の決まり文句。","動作はするが、まとめる処理や形式変換を自分で実装する必要がある。","リアルタイム性がなく、サーバーの管理も必要。"],
+h:"「ほぼリアルタイム」で S3 / Redshift / OpenSearch に配信 → Data Firehose（旧 Kinesis Data Firehose）"},
+
+{id:"p07",d:3,
+q:"世界中のユーザーが、us-east-1 の S3 バケットに数 GB の動画ファイルをアップロードしています。遠方のユーザーからアップロードが遅いという苦情があります。アップロード速度を改善する方法はどれですか。（2 つ選択）",
+o:["S3 Transfer Acceleration を有効にする","マルチパートアップロードを使用する","バケットのストレージクラスを S3 標準 - IA に変更する","バケットのバージョニングを有効にする","S3 のライフサイクルルールを設定する"],
+a:[0,1],k:["世界中","数 GB","アップロードが遅い","2 つ選択"],
+st:"遠くの本店へ大きな荷物を送るとき、近所の集荷所（エッジロケーション）に持ち込めば、そこから先は専用の高速便（AWS のネットワーク）で運んでくれる。これが Transfer Acceleration。さらに荷物を小分け（マルチパート）にして同時に送れば、もっと速く、途中で失敗しても一部だけ送り直せる。",
+m:[["世界のユーザー","近くのエッジへ",0],["Transfer Acceleration","AWS 網で高速転送",1],["マルチパート","分割して並列アップロード",1],["S3（us-east-1）","",0]],
+ex:["正解。エッジロケーションを経由し、最適化された AWS のネットワークで転送する。","正解。大きなファイルを分割して並列にアップロードし、失敗した部分だけ再送できる（100 MB 以上で推奨）。","ストレージクラスは保存コストの話で、アップロード速度は変わらない。","バージョニングは上書きや削除からの保護。速度とは関係ない。","ライフサイクルは保存後のクラス移行や削除の自動化。速度とは関係ない。"],
+h:"遠方から S3 へのアップロードを速く → Transfer Acceleration ＋ マルチパートアップロード"},
+
+{id:"p08",d:3,
+q:"スタートアップ企業が新しいモバイルアプリ用の REST API を構築します。トラフィックは予測できず、ほぼゼロの時間帯と急増する時間帯があります。サーバーの管理を避け、使った分だけ支払いたいと考えています。どのアーキテクチャが最適ですか。",
+o:["EC2 の Auto Scaling グループと ALB、Amazon RDS","Amazon API Gateway、AWS Lambda、Amazon DynamoDB","大きな EC2 インスタンス 1 台と EBS","Amazon ECS on EC2 と Aurora プロビジョンド"],
+a:[1],k:["予測できず","サーバーの管理を避け","使った分だけ"],
+st:"イベントのたびにキッチンカーを買うのではなく、注文が入ったときだけ呼べる料理人（Lambda）に頼むイメージ。注文窓口（API Gateway）も倉庫（DynamoDB）も使った分だけの支払い。客がゼロなら費用もほぼゼロ。",
+m:[["モバイルアプリ","HTTPS",0],["API Gateway","リクエスト数で課金",0],["Lambda","実行時間だけ課金",1],["DynamoDB","オンデマンドモード",0]],
+ex:["スケールはできるが、最低台数分の常時コストとサーバー管理が発生する。","正解。すべてサーバーレスで自動的にスケールし、使われていない時間のコストもほぼゼロ。「運用オーバーヘッド最小」「予測できない」の定番の答え。","スケールせず、単一障害点になる。","EC2 の管理が必要で、プロビジョンドは常に課金される。"],
+h:"予測できない・サーバー管理なし・従量課金 → API Gateway ＋ Lambda ＋ DynamoDB"},
+
+{id:"p09",d:3,
+q:"EC サイトでは、出品者が S3 バケットに商品画像をアップロードするたびに、サムネイル画像を自動で生成したいと考えています。運用上のオーバーヘッドが最も少ない方法はどれですか。",
+o:["EC2 インスタンスで cron を実行し、5 分ごとにバケットを確認して新しい画像を処理する","S3 のイベント通知で AWS Lambda 関数を呼び出し、サムネイルを生成して別のバケットに保存する","出品者に、サムネイルも自分で作成してアップロードしてもらう","AWS Batch で 1 日 1 回まとめて処理する"],
+a:[1],k:["アップロードするたびに","自動で生成","オーバーヘッドが最も少ない"],
+st:"倉庫に新しい荷物が届くたびに呼び鈴（S3 イベント通知）が鳴って、係の人（Lambda）が飛んできてミニチュア（サムネイル）を作ってくれる。5分おきに倉庫を見回る警備員（cron）を雇う必要はない。",
+m:[["出品者","画像をアップロード",0],["S3","作成イベントを通知",0],["Lambda","サムネイルを生成",1],["S3（別バケット）","サムネイルを保存",0]],
+ex:["定期的な確認は無駄が多く、EC2 の管理も必要。処理まで最大5分遅れる。","正解。イベント駆動のサーバーレス処理の典型。出力を別バケットにするのは、出力がまたイベントを起こす無限ループを防ぐため。","要件（自動で生成）を満たさない。","リアルタイム性がなく、仕組みとして大がかり。"],
+h:"「〜するたびに自動で」→ イベント通知 → Lambda（または EventBridge）"},
+
+{id:"c01",d:4,
+q:"企業は S3 に大量のデータを保存していますが、どのオブジェクトがいつアクセスされるかのパターンは予測できません。取り出し料金を気にせずに、ストレージコストを自動で最適化したいと考えています。どのストレージクラスを使用すべきですか。",
+o:["S3 標準","S3 標準 - 低頻度アクセス (S3 標準 - IA)","S3 Intelligent-Tiering","S3 1 ゾーン - IA"],
+a:[2],k:["パターンは予測できません","取り出し料金を気にせずに","自動で最適化"],
+st:"どの服をいつ着るか分からないクローゼット。Intelligent-Tiering は、しばらく着ていない服を自動で奥の棚に移し、着たらまた手前に戻してくれる整理上手な家政婦さん。月々の少額の手数料（監視の料金）はかかるが、出し入れの追加料金はかからない。",
+m:[["オブジェクト","アクセス状況を監視",0],["Intelligent-Tiering","自動で階層を移動",1],["アクセス階層","高頻度⇄低頻度⇄アーカイブ",0]],
+ex:["アクセスが少ないデータにも、高い保存料金を払い続けることになる。","アクセスが少ないと分かっているデータ向け。取り出し料金がかかり、頻繁にアクセスされると割高になる。","正解。「アクセスパターンが不明・変化する」は Intelligent-Tiering のキーワード。","1つの AZ にしか保存されず、耐障害性が低い。取り出し料金もかかる。作り直せるデータ向け。"],
+h:"アクセスパターン不明 → Intelligent-Tiering。低頻度と分かっている → 標準 - IA"},
+
+{id:"c02",d:4,
+q:"企業はアクセスログを S3 に保存しています。ログは最初の 30 日間は頻繁に分析されますが、その後はほとんど参照されません。規制により 7 年間保管する必要があり、監査時には 48 時間以内に取り出せれば問題ありません。最もコスト効率の高い方法はどれですか。",
+o:["すべてのログを S3 標準に 7 年間保存する","ライフサイクルルールで 30 日後に S3 標準 - IA に移行する","ライフサイクルルールで 30 日後に S3 Glacier Deep Archive に移行し、7 年後に削除する","ログを EBS スナップショットとして保存する"],
+a:[2],k:["最初の 30 日間","7 年間保管","48 時間以内","最もコスト効率"],
+st:"最初の1か月は机の上で使う書類。その後は倉庫の奥の段ボール（Deep Archive）へ。取り出すには1〜2日かかるけれど、保管料は S3 で一番安い。7年たったら自動で廃棄するところまで、ライフサイクルルールで予約できる。",
+m:[["S3 標準","0〜30日：分析",0],["ライフサイクルルール","30日後に移行",0],["Glacier Deep Archive","最安・取り出し12〜48時間",1],["自動削除","7年後",0]],
+ex:["めったに参照しないデータに、最も高いクラスを使い続けるのは無駄。","コストは下がるが、Deep Archive よりずっと高い。すぐに取り出す必要がないなら最適ではない。","正解。Deep Archive は標準の取り出しで 12 時間以内、大量取り出しで 48 時間以内。長期保管のコンプライアンス用途に最適。","EBS スナップショットはログの長期保管用の仕組みではなく、S3 のアーカイブより高い。"],
+h:"取り出しがミリ秒〜数分 → Glacier Instant / Flexible。数日待てる・最安 → Glacier Deep Archive"},
+
+{id:"c03",d:4,
+q:"企業は 24 時間 365 日稼働するワークロードを今後 3 年間運用する予定です。インスタンスファミリーやリージョンは今後変更する可能性があり、一部を AWS Fargate や AWS Lambda に移行することも検討しています。コストを最も削減できる購入オプションはどれですか。",
+o:["オンデマンドインスタンス","Compute Savings Plans","スポットインスタンス","Dedicated Hosts"],
+a:[1],k:["24 時間 365 日","3 年間","変更する可能性","Fargate や AWS Lambda"],
+st:"「毎月これだけ使います」と約束すると割引される、携帯電話の定額プランのようなもの。Compute Savings Plans は、機種（インスタンスファミリー）もエリア（リージョン）も自由に変えられて、Fargate や Lambda にまで割引が効く一番柔軟なプラン。",
+m:[["利用額の約束","1時間あたりの金額",0],["Compute Savings Plans","最大66%割引",1],["EC2 / Fargate / Lambda","ファミリー・リージョン変更可",0]],
+ex:["柔軟だが、長期の安定稼働では最も割高。","正解。EC2 Instance Savings Plans（最大 72% 割引）はファミリーとリージョンが固定。変更の可能性や Fargate・Lambda があるなら Compute Savings Plans。","大幅に安いが中断される可能性があり、24時間365日の安定稼働には向かない。","ライセンスやコンプライアンスの都合で物理サーバーを専有するための選択肢。コスト削減が目的ではない。"],
+h:"安定稼働で柔軟さ重視 → Compute Savings Plans。固定でよい → EC2 Instance SP / RI。中断してよい → スポット"},
+
+{id:"c04",d:4,
+q:"企業は毎晩、数百万件の商品画像のメタデータを解析するバッチジョブを実行しています。ジョブは途中で中断されても再開でき、完了時刻に厳密な期限はありません。コストを最小化するための最適なインスタンスの購入オプションはどれですか。",
+o:["オンデマンドインスタンス","リザーブドインスタンス（3 年）","スポットインスタンス","Dedicated Instances"],
+a:[2],k:["中断されても再開でき","厳密な期限はありません","コストを最小化"],
+st:"スポットは閉店間際のタイムセールの空席。最大 90% 引きで使えるけれど、正規のお客さんが来たら2分前に声をかけられて席を譲る必要がある。途中で席を立っても続きから作業できる仕事（中断できるバッチ）なら、これ以上お得な席はない。",
+m:[["バッチジョブ","途中から再開できる",0],["スポットインスタンス","最大90%割引",1],["中断の通知","2分前",0]],
+ex:["中断されずに使えるが、割引がない。","毎晩数時間だけのジョブに3年の予約は無駄が大きい。","正解。「中断できる」「耐障害性がある」「時間に余裕がある」はスポットのキーワード。","ハードウェアを専有するための選択肢で、高い。"],
+h:"中断してよい・バッチ・期限がゆるい → スポットインスタンス"},
+
+{id:"c05",d:4,
+q:"企業の AWS 請求書を確認したところ、NAT ゲートウェイのデータ処理料金が高額でした。調査の結果、プライベートサブネットの EC2 インスタンスから同じリージョンの S3 への大量のトラフィックが原因でした。コストを削減する最も簡単な方法はどれですか。",
+o:["NAT ゲートウェイを NAT インスタンスに置き換える","S3 のゲートウェイ型 VPC エンドポイントを作成し、ルートテーブルに追加する","S3 のインターフェイス型 VPC エンドポイントを作成する","EC2 インスタンスをパブリックサブネットに移動する"],
+a:[1],k:["NAT ゲートウェイのデータ処理料金","同じリージョンの S3","最も簡単"],
+st:"毎日、倉庫から隣の保管庫まで、わざわざ有料道路（NAT ゲートウェイ）を通って荷物を運んでいた。ゲートウェイエンドポイントは無料の専用通路。ルートテーブルに1行足すだけで、S3 宛ての荷物は自動でこちらを通るようになる。",
+m:[["EC2","プライベートサブネット",0],["ルートテーブル","S3 のプレフィックスリスト",0],["Gateway Endpoint","料金 0 円",1],["S3","",0]],
+ex:["NAT インスタンスは自分で管理する必要があり、可用性や性能の問題もある。「最も簡単」ではない。","正解。ゲートウェイエンドポイントは追加料金なし。S3 と DynamoDB 向けの通信を NAT から外せる。","インターフェイスエンドポイントは時間料金とデータ処理料金がかかる。オンプレミスからの接続などで使う。","パブリックサブネットへの移動はセキュリティの後退。"],
+h:"NAT の料金が高い × S3 / DynamoDB → ゲートウェイエンドポイント（無料）"},
+
+{id:"c06",d:4,
+q:"企業はオンプレミスのデータセンターにある 80 TB のデータを 2 週間以内に AWS へ移行する必要があります。インターネット回線は 100 Mbps で、業務でも使用しているため帯域をすべて使うことはできません。最もコスト効率が高く、期限内に移行できる方法はどれですか。",
+o:["既存の回線で AWS DataSync を使って転送する","AWS Snowball Edge デバイスを使用して、データを物理的に配送する","新しく AWS Direct Connect を契約して転送する","S3 Transfer Acceleration を使用する"],
+a:[1],k:["80 TB","2 週間以内","100 Mbps"],
+st:"引っ越しの荷物が大量にあるとき、宅配便で毎日少しずつ送るより、トラック（Snowball）を1台呼んで一気に積んだほうが早い。100 Mbps をフルに使っても、80 TB は約74日かかる計算。物理的に運ぶほうが速いという逆転がポイント。",
+m:[["オンプレミス","80 TB",0],["Snowball Edge","コピーして配送",1],["AWS","S3 に取り込み",0]],
+ex:["100 Mbps を 100% 使っても約74日。期限に間に合わない。","正解。数十 TB〜PB 規模で回線が細いときの定番。1台で数十 TB を物理的に運べる。","開通までに数週間〜数か月かかることがあり、一時的な移行にはコストも高い。","遠距離の転送を速くする仕組みで、回線の帯域そのものは増えない。"],
+h:"TB 級 × 細い回線 × 期限あり → Snowball。継続的に同期 → DataSync"},
+
+{id:"c07",d:4,
+q:"開発チームは、平日の日中だけ断続的に使用され、使用量の予測が難しいリレーショナルデータベースを必要としています。MySQL 互換で、アイドル時のコストを抑え、容量管理の手間をなくしたいと考えています。どのソリューションが最適ですか。",
+o:["大きめのインスタンスクラスでプロビジョニングした Amazon Aurora","Amazon Aurora Serverless v2","マルチ AZ の RDS for MySQL","Amazon DynamoDB に移行する"],
+a:[1],k:["断続的","予測が難しい","MySQL 互換","容量管理の手間をなくしたい"],
+st:"Aurora Serverless v2 は、お客さんの数に合わせて席数が自動で伸び縮みするレストラン。昼のピークには席を増やし、空いている時間は最小限に縮めて、その分だけ支払う。店長が毎日席数を考える必要はない。",
+m:[["開発チーム","断続的に利用",0],["Aurora Serverless v2","容量（ACU）が自動で伸縮",1],["ストレージ","通常の Aurora と同じ",0]],
+ex:["ピークに合わせてサイズを決めると、使っていない時間のコストが無駄になる。","正解。負荷に応じて容量（ACU）が細かく自動でスケールする。MySQL と PostgreSQL に互換性がある。","常に動いているインスタンスで、容量の管理も必要。コストはむしろ上がる。","NoSQL への移行はアプリの大幅な書き換えが必要で、MySQL 互換の要件も満たさない。"],
+h:"リレーショナル DB × 予測できない・断続的 → Aurora Serverless v2"},
+
+{id:"c08",d:4,
+q:"企業は 1 つの AWS アカウントで複数の部門のリソースを運用しています。財務部門は、部門ごとの月額コストを把握し、予算を超えそうなときにアラートを受け取りたいと考えています。どの方法が最適ですか。",
+o:["リソースに部門タグを付けてコスト配分タグとして有効化し、Cost Explorer で分析して、AWS Budgets でアラートを設定する","AWS Trusted Advisor のコスト最適化チェックを毎月確認する","CloudWatch ダッシュボードで各 EC2 の CPU 使用率を表示する","部門ごとの請求書を手作業で作成する"],
+a:[0],k:["部門ごとの月額コスト","予算を超えそうなとき","アラート"],
+st:"家計簿でいえば、レシートに「食費」「子ども」「日用品」とシールを貼る（タグ付け）ところから。そのシールをコスト配分タグとして有効にすると、家計簿アプリ（Cost Explorer）が項目ごとに集計し、Budgets が「今月の食費、予算の 80% を超えそうです」と通知してくれる。",
+m:[["リソース","部門タグ",0],["コスト配分タグ","請求コンソールで有効化",1],["Cost Explorer","部門別に分析",0],["AWS Budgets","超えそうならアラート",0]],
+ex:["正解。タグは付けるだけでなく、請求コンソールで「コスト配分タグ」として有効化する必要がある点がよく問われる。","Trusted Advisor は削減のヒントを出すもので、部門別の集計やアラートはできない。","CPU 使用率はコストではない。","手作業は間違いやすく、アラートもない。"],
+h:"部門別に見える化 → コスト配分タグ ＋ Cost Explorer。予算のアラート → AWS Budgets"}
+];
+
+/* ============================================================ */
+const DOM = {1:{n:"セキュア",w:30},2:{n:"耐障害性",w:26},3:{n:"高性能",w:24},4:{n:"コスト最適化",w:20}};
+const IV = [0,1,3,7,16,35,90];            // 箱ごとの次回までの日数
+const DAY = 864e5, KEY = "saa-drill-v1";
+const BYID = Object.fromEntries(BANK.map(q=>[q.id,q]));
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let S = loadLocal();
+let remote = null, saving = false, dirty = false;
+
+function blank(){ return {v:1,cards:{},log:{}}; }
+function loadLocal(){
+  try{ const j = JSON.parse(localStorage.getItem(KEY)); if(j && j.cards) return j; }catch(e){}
+  return blank();
+}
+function dayKey(t){ const d=new Date(t); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+
+async function persist(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  if(!remote) return;
+  if(saving){ dirty = true; return; }
+  saving = true;
+  try{ await remote.set(JSON.parse(JSON.stringify(S))); setSync("cloud"); }
+  catch(e){ setSync("error"); }
+  saving = false;
+  if(dirty){ dirty = false; persist(); }
+}
+function merge(r){
+  if(!r || !r.cards) return;
+  for(const [id,c] of Object.entries(r.cards)){
+    const m = S.cards[id];
+    if(!m || (c.t||0) > (m.t||0)) S.cards[id] = {...c};
+  }
+  for(const [d,n] of Object.entries(r.log||{})) S.log[d] = Math.max(S.log[d]||0, n);
+}
+function setSync(s){
+  const el = $("#sync"); el.dataset.s = s;
+  el.querySelector("span").textContent = s==="cloud" ? "クラウドに保存" : s==="error" ? "同期できませんでした" : "この端末に保存";
+}
+async function connect(){
+  if(!window.claude || !window.claude.use) return;
+  try{
+    const user = await window.claude.use("user");
+    const uid = user ? await user.id() : null;
+    if(!uid) return;
+    const db = await window.claude.use("db");
+    if(!db) return;
+    const ref = db.doc("data/users/"+uid+"/srs");
+    const snap = await ref.get();
+    if(snap.exists) merge(JSON.parse(JSON.stringify(snap.data())));
+    remote = ref;
+    setSync("cloud");
+    await persist();
+    if(!$("#home").hidden) renderHome();
+  }catch(e){ setSync("error"); }
+}
+
+/* ---------- 間隔反復 ---------- */
+function commit(id, correct, confident, prev, first){
+  const now = Date.now();
+  const p = prev || {b:0,n:0,w:0};
+  let b, days;
+  if(!correct){ b = 1; days = 1; }
+  else if(!confident){ b = Math.max(1,p.b); days = Math.max(1, Math.ceil(IV[b]/2)); }
+  else { b = Math.min(6, p.b===0 ? 2 : p.b+1); days = IV[b]; }
+  S.cards[id] = {b, due: now + days*DAY - 3*3600e3, n:p.n+1, w:p.w+(correct?0:1), t:now, l:correct?1:0};
+  if(first){
+    const k = dayKey(now); S.log[k] = (S.log[k]||0)+1;
+    const keys = Object.keys(S.log).sort(); while(keys.length>120) delete S.log[keys.shift()];
+  }
+  persist();
+  return days;
+}
+function dueList(){
+  const now = Date.now();
+  return BANK.filter(q=>S.cards[q.id] && S.cards[q.id].due<=now).sort((a,b)=>S.cards[a.id].due-S.cards[b.id].due);
+}
+function buildSession(mode){
+  const size = {one:1,three:3,ten:10,review:10}[mode];
+  let list = dueList().slice(0,size);
+  if(mode!=="review"){
+    const fresh = BANK.filter(q=>!S.cards[q.id]);
+    while(list.length<size && fresh.length){
+      const doms = [...new Set(fresh.map(q=>q.d))];
+      const tot = doms.reduce((s,d)=>s+DOM[d].w,0);
+      let r = Math.random()*tot, d = doms[0];
+      for(const x of doms){ r -= DOM[x].w; if(r<=0){ d = x; break; } }
+      const cand = fresh.filter(q=>q.d===d);
+      const q = cand[Math.floor(Math.random()*cand.length)];
+      list.push(q); fresh.splice(fresh.indexOf(q),1);
+    }
+    if(list.length<size){
+      const ahead = BANK.filter(q=>!list.includes(q)).sort((a,b)=>{
+        const A=S.cards[a.id], B=S.cards[b.id];
+        return (B.w/B.n - A.w/A.n) || (A.due-B.due);
+      });
+      list = list.concat(ahead.slice(0,size-list.length));
+    }
+  }
+  return list;
+}
+function whenLabel(days){
+  if(days<=1) return "明日";
+  if(days===2) return "あさって";
+  if(days<30) return days+"日後";
+  return Math.round(days/30)+"か月後";
+}
+
+/* ---------- ホーム ---------- */
+function renderHome(){
+  const now = Date.now();
+  const due = dueList().length;
+  const fresh = BANK.filter(q=>!S.cards[q.id]).length;
+  const master = BANK.filter(q=>S.cards[q.id] && S.cards[q.id].b>=4).length;
+  $("#nDue").textContent = due;
+  $("#nNew").textContent = fresh;
+  $("#nMaster").textContent = master+"/"+BANK.length;
+  const rev = $("#mRev"); rev.disabled = due===0;
+  $("#mRevSub").textContent = due ? due+"問が期限切れ" : "復習待ちはありません";
+
+  $("#dom").innerHTML = [1,2,3,4].map(d=>{
+    const qs = BANK.filter(q=>q.d===d);
+    let n=0,w=0,seen=0;
+    qs.forEach(q=>{ const c=S.cards[q.id]; if(c){ n+=c.n; w+=c.w; seen++; } });
+    const pct = n ? Math.round((n-w)/n*100) : null;
+    return `<div class="drow"><div class="nm"><b>${DOM[d].n}</b><span>${DOM[d].w}% ・ ${seen}/${qs.length}問</span></div>
+      <div class="track"><i style="width:${pct??0}%"></i></div><div class="pct">${pct===null?"—":pct+"%"}</div></div>`;
+  }).join("");
+
+  const start = new Date(); start.setHours(0,0,0,0);
+  const counts = Array(7).fill(0);
+  for(const c of Object.values(S.cards)){
+    const idx = Math.max(0, Math.floor((c.due - start.getTime())/DAY));
+    if(idx<7) counts[idx]++;
+  }
+  const mx = Math.max(1,...counts);
+  const wk = ["日","月","火","水","木","金","土"];
+  $("#week").innerHTML = counts.map((n,i)=>{
+    const d = new Date(start.getTime()+i*DAY);
+    return `<div class="wd"><b>${n}</b><div class="col"><i style="height:${n?Math.max(6,n/mx*100):0}%"></i></div><span>${i===0?"今日":wk[d.getDay()]}</span></div>`;
+  }).join("");
+
+  let streak = 0, t = Date.now();
+  if(!S.log[dayKey(t)]) t -= DAY;
+  while(S.log[dayKey(t)]){ streak++; t -= DAY; }
+  $("#streak").textContent = streak ? streak+"日連続" : "";
+  const total = Object.values(S.cards).reduce((s,c)=>s+c.n,0);
+  $("#stat").textContent = `全${BANK.length}問・のべ${total}回解答`;
+}
+
+/* ---------- 出題 ---------- */
+let sess = null;
+function show(id){ ["#home","#quiz","#done"].forEach(s=>$(s).hidden = s!==id); window.scrollTo(0,0); }
+
+function start(mode){
+  const list = buildSession(mode);
+  if(!list.length) return;
+  sess = {mode, list, i:0, results:[]};
+  show("#quiz"); showQ();
+}
+function showQ(){
+  const q = sess.list[sess.i];
+  const prev = S.cards[q.id] ? {...S.cards[q.id]} : null;
+  const perm = q.o.map((_,i)=>i).sort(()=>Math.random()-.5);
+  sess.cur = {q, prev, perm, sel:new Set(), done:false, days:0};
+  $("#qDom").textContent = DOM[q.d].n;
+  const kind = $("#qKind");
+  kind.textContent = prev ? (prev.l===0 ? "前回×" : "復習") : "初出題";
+  kind.className = "chip" + (prev ? " rev" : "");
+  const multi = $("#qMulti"); multi.hidden = q.a.length<2; multi.textContent = q.a.length+"つ選択";
+  $("#qCount").textContent = (sess.i+1)+" / "+sess.list.length;
+  $("#qBar").style.width = (sess.i/sess.list.length*100)+"%";
+  $("#qBody").classList.remove("answered");
+  $("#qStem").innerHTML = highlight(q.q, q.k);
+  $("#qOpts").innerHTML = perm.map((oi,di)=>`<button class="opt" data-di="${di}"><span class="key">${"ABCDE"[di]}</span><span class="tx">${esc(q.o[oi])}</span></button>`).join("");
+  $("#qExp").innerHTML = "";
+  renderActions();
+}
+function highlight(text, kws){
+  let h = esc(text);
+  (kws||[]).forEach(k=>{ const e = esc(k); h = h.split(e).join("<mark>"+e+"</mark>"); });
+  return h;
+}
+function pick(di){
+  const c = sess.cur; if(c.done) return;
+  const need = c.q.a.length;
+  if(need===1){ c.sel = new Set([di]); }
+  else { c.sel.has(di) ? c.sel.delete(di) : (c.sel.size<need && c.sel.add(di)); }
+  document.querySelectorAll("#qOpts .opt").forEach(b=>b.classList.toggle("sel", c.sel.has(+b.dataset.di)));
+  renderActions();
+}
+function renderActions(){
+  const c = sess.cur, act = $("#qActions");
+  if(!c.done){
+    const need = c.q.a.length;
+    act.innerHTML = `<button class="btn" id="aSubmit" ${c.sel.size===need?"":"disabled"}>回答する${need>1?`<small>${c.sel.size}/${need} 選択中</small>`:""}</button>`;
+    return;
+  }
+  const last = sess.i===sess.list.length-1;
+  const nx = last ? "結果を見る" : "次の問題へ";
+  act.innerHTML = c.correct
+    ? `<button class="btn sub" id="aUnsure">迷った<small>少し早めに再出題</small></button><button class="btn" id="aNext">自信あり<small>${nx}</small></button>`
+    : `<button class="btn" id="aNext">${nx}<small>この問題は${whenLabel(c.days)}にもう一度</small></button>`;
+}
+function submit(){
+  const c = sess.cur, q = c.q;
+  const chosen = [...c.sel].map(di=>c.perm[di]);
+  c.correct = chosen.length===q.a.length && chosen.every(i=>q.a.includes(i));
+  c.done = true;
+  c.days = commit(q.id, c.correct, true, c.prev, true);
+  $("#qBody").classList.add("answered");
+  document.querySelectorAll("#qOpts .opt").forEach(b=>{
+    const di = +b.dataset.di, oi = c.perm[di];
+    const isAns = q.a.includes(oi), picked = c.sel.has(di);
+    if(isAns) b.classList.add("ok");
+    else if(picked) b.classList.add("bad");
+    b.classList.remove("sel");
+    b.insertAdjacentHTML("beforeend", `<span class="why"><span class="mk">${isAns?"○":"×"}</span>${esc(q.ex[oi])}</span>`);
+  });
+  $("#qExp").innerHTML = `
+    <div class="result ${c.correct?"ok":"bad"}" id="res">
+      <h3>${c.correct?"正解":"不正解"}</h3>
+      <span class="next" id="resNext">次の出題：<b>${whenLabel(c.days)}</b></span>
+    </div>
+    <div class="exp">
+      <div class="card story"><h4>ストーリーで理解する</h4><p>${esc(q.st)}</p></div>
+      <div class="card iso"><h4>立体マップ（リクエストは上から下へ流れる）</h4>${isoMap(q.m)}</div>
+      <div class="card hook"><h4>試験での見分け方</h4><p>${esc(q.h)}</p></div>
+    </div>`;
+  sess.results.push({q, correct:c.correct, days:c.days});
+  renderActions();
+  $("#res").scrollIntoView({behavior:"smooth", block:"start"});
+}
+function next(unsure){
+  const c = sess.cur;
+  if(unsure && c.correct){
+    c.days = commit(c.q.id, true, false, c.prev, false);
+    sess.results[sess.results.length-1].days = c.days;
+  }
+  sess.i++;
+  if(sess.i>=sess.list.length) finish(); else { showQ(); window.scrollTo(0,0); }
+}
+function finish(){
+  const r = sess.results, ok = r.filter(x=>x.correct).length;
+  $("#dScore").textContent = ok+" / "+r.length;
+  const due = dueList().length;
+  $("#dMsg").textContent = ok===r.length ? "全問正解です。間隔をのばして、また出題します。"
+    : "まちがえた問題は明日、もう一度出てきます。" + (due ? "" : "");
+  $("#dList").innerHTML = r.map(x=>`<div class="ritem"><span class="m ${x.correct?"ok":"bad"}">${x.correct?"○":"×"}</span><span class="s">${esc(x.q.q)}</span><span class="d">${whenLabel(x.days)}</span></div>`).join("");
+  show("#done");
+}
+
+/* ---------- 立体マップ（等角投影のフロア） ---------- */
+function emw(s){ let w=0; for(const ch of s) w += /[\x00-\x7F]/.test(ch) ? .58 : 1; return w; }
+function wrap(s, maxEm){
+  const out=[]; let line="", w=0;
+  for(const ch of s){ const cw=/[\x00-\x7F]/.test(ch)?.58:1; if(w+cw>maxEm && line){ out.push(line); line=""; w=0; } line+=ch; w+=cw; }
+  if(line) out.push(line); return out;
+}
+function isoMap(nodes){
+  const cx=96, hw=84, hh=22, th=10, gap=78, top=6;
+  const H = top + (nodes.length-1)*gap + hh*2 + th + 8;
+  let s = `<svg viewBox="0 0 360 ${H}" role="img" aria-label="構成の立体マップ">`;
+  nodes.forEach(([t,note,hl],i)=>{
+    const y = top + i*gap;
+    if(i>0){
+      const y1 = y - gap + hh*2 + th + 3, y2 = y - 1;
+      s += `<line class="ar" x1="${cx}" y1="${y1}" x2="${cx}" y2="${y2-6}"/><path class="ah" d="M${cx-5} ${y2-7}L${cx+5} ${y2-7}L${cx} ${y2}Z"/>`;
+    }
+    const fs = Math.max(9, Math.min(13, 150/Math.max(1,emw(t))));
+    s += `<g class="${hl?"hl":""}">
+      <polygon class="l" points="${cx-hw},${y+hh} ${cx},${y+2*hh} ${cx},${y+2*hh+th} ${cx-hw},${y+hh+th}"/>
+      <polygon class="r" points="${cx},${y+2*hh} ${cx+hw},${y+hh} ${cx+hw},${y+hh+th} ${cx},${y+2*hh+th}"/>
+      <polygon class="t" points="${cx},${y} ${cx+hw},${y+hh} ${cx},${y+2*hh} ${cx-hw},${y+hh}"/>
+      <text class="nm" x="${cx}" y="${y+hh+fs*0.36}" font-size="${fs.toFixed(1)}">${esc(t)}</text></g>`;
+    if(note){
+      const lines = wrap(note, 13).slice(0,3);
+      const y0 = y + hh + 4 - (lines.length-1)*8;
+      s += `<circle class="dot" cx="${cx+hw+6}" cy="${y+hh}" r="2"/>`;
+      s += `<text class="note" x="${cx+hw+14}" y="${y0}">` + lines.map((l,k)=>`<tspan x="${cx+hw+14}" dy="${k?16:0}">${esc(l)}</tspan>`).join("") + `</text>`;
+    }
+  });
+  return s + `</svg>`;
+}
+
+/* ---------- イベント ---------- */
+document.querySelectorAll(".mode").forEach(b=>b.addEventListener("click",()=>start(b.dataset.mode)));
+$("#qOpts").addEventListener("click",e=>{ const b=e.target.closest(".opt"); if(b) pick(+b.dataset.di); });
+$("#qActions").addEventListener("click",e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.id==="aSubmit") submit(); else if(b.id==="aNext") next(false); else if(b.id==="aUnsure") next(true);
+});
+$("#quit").addEventListener("click",()=>{ sess=null; renderHome(); show("#home"); });
+$("#dHome").addEventListener("click",()=>{ renderHome(); show("#home"); });
+$("#dMore").addEventListener("click",()=>start("one"));
+let resetArm = 0;
+$("#reset").addEventListener("click",e=>{
+  if(Date.now()-resetArm < 4000){ S = blank(); persist(); renderHome(); e.target.textContent="リセットしました"; resetArm=0; return; }
+  resetArm = Date.now(); e.target.textContent = "もう一度押すと全記録を消去します";
+  setTimeout(()=>{ if(resetArm) e.target.textContent="学習記録をリセット"; resetArm=0; },4000);
+});
+document.addEventListener("keydown",e=>{
+  if($("#quiz").hidden || !sess) return;
+  const c = sess.cur;
+  if(!c.done && /^[1-5]$/.test(e.key)){ const di=+e.key-1; if(di<c.perm.length) pick(di); }
+  else if(e.key==="Enter"){ const b = $("#aSubmit") || $("#aNext"); if(b && !b.disabled){ e.preventDefault(); b.click(); } }
+});
+
+renderHome();
+connect();
+</script>
+
+</body></html>
