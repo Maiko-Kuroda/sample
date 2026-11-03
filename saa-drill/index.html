@@ -160,6 +160,18 @@ section.block > h2 .label{font-weight:400}
 .iso .ar{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3;fill:none}
 .iso .ah{fill:var(--muted)}
 .iso .dot{fill:var(--muted)}
+.iso .note.c{text-anchor:middle}
+.iso .sb{fill:var(--muted);font-family:var(--sans);text-anchor:middle}
+.iso .hl .sb{fill:var(--iso-hl-ink);opacity:.85}
+.iso .zone{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:4 4;opacity:.7}
+.iso .zl{fill:var(--muted);font-family:var(--mono);font-size:10.5px}
+.iso .nb{stroke:var(--line);stroke-width:1}
+.iso .nb.d0{fill:var(--surface)} .iso .nb.d1{fill:var(--surface-2)}
+.iso .nb.hlb{stroke:var(--accent);stroke-width:2}
+.iso .nl{fill:var(--ink);font-family:var(--sans);font-weight:700;font-size:11.5px}
+.iso .nl.hlt{fill:var(--accent)}
+.iso .nn{fill:var(--muted);font-family:var(--sans);font-size:10px}
+.iso .lf{stroke:var(--iso-r);stroke-width:1}
 .hook{background:var(--accent-soft);border-color:transparent}
 .hook p{font-weight:700;font-size:15px}
 
@@ -272,7 +284,7 @@ section.block > h2 .label{font-weight:400}
    d: 1=セキュア 2=耐障害性 3=高性能 4=コスト最適化
    a: 正解のインデックス（複数なら複数選択）
    k: 問題文のカギになる言葉（回答後にハイライト）
-   st: ストーリー解説 / m: 立体マップ [名前, メモ, 強調] / ex: 選択肢ごとの解説 / h: 覚え方
+   st: ストーリー解説 / m: 立体マップ（配列＝経路型 [名前, メモ, 強調] / {type:"share"} 共有型 / {type:"nest"} 入れ子型） / ex: 選択肢ごとの解説 / h: 覚え方
    ============================================================ */
 const BANK = [
 {id:"s01",u:"4A",d:1,
@@ -280,7 +292,7 @@ q:"ある企業は、プライベートサブネット内の Amazon EC2 イン�
 o:["パブリックサブネットに NAT ゲートウェイを作成し、プライベートサブネットのルートテーブルに追加する","S3 のゲートウェイ型 VPC エンドポイントを作成し、プライベートサブネットのルートテーブルに関連付ける","EC2 インスタンスにパブリック IP を割り当て、インターネットゲートウェイ経由で S3 にアクセスする","AWS Direct Connect 接続を確立し、S3 へのトラフィックを Direct Connect 経由にする"],
 a:[1],k:["インターネットを経由してはいけません","追加コストを最小限"],
 st:"ECサイトの倉庫（プライベートサブネット）から、隣の保管庫（S3）へ荷物を運びたい。NAT ゲートウェイは「いったん公道（インターネット）に出てから保管庫に入る」ルートで、しかも通行料（データ処理料金）がかかる。ゲートウェイエンドポイントは倉庫と保管庫をつなぐ社内専用の通路。ルートテーブルに1行足すだけで開通し、通行料は無料。",
-m:[["EC2","プライベートサブネット",0],["ルートテーブル","S3宛はエンドポイントへ",0],["Gateway Endpoint","無料の専用通路",1],["S3","同じリージョン",0]],
+m:{type:"nest",tree:{t:"リージョン（同じリージョン）",c:[{t:"VPC",d:"v",c:[{t:"プライベートサブネット",c:[{t:"EC2"}]},{t:"Gateway Endpoint",n:"ルートテーブルに追加",hl:1}]},{t:"S3",n:"VPC の外にある"}]}},
 ex:["NAT ゲートウェイはインターネット側への出口。S3 には届くがパブリック経路になり、時間料金とデータ処理料金もかかるため要件に合わない。","正解。S3 と DynamoDB だけが使えるゲートウェイ型エンドポイントは無料で、AWS ネットワーク内で完結する。バケットポリシーの aws:SourceVpce 条件で「この通路以外からは拒否」まで絞れる。","パブリック IP とインターネットゲートウェイは、まさに禁止されているインターネット経由。","Direct Connect はオンプレミスと AWS を結ぶ専用線。VPC 内の EC2 から S3 への経路には関係なく、コストも高い。"],
 h:"S3・DynamoDB へのプライベート接続 → ゲートウェイエンドポイント（無料）。それ以外のサービス → インターフェイスエンドポイント（有料）"},
 
@@ -307,7 +319,7 @@ q:"ある企業は AWS Organizations で 50 のアカウントを管理してい
 o:["各アカウントの IAM ユーザーとロールに、CloudTrail の停止を拒否する IAM ポリシーをアタッチする","組織のルートまたは OU に、cloudtrail:StopLogging と cloudtrail:DeleteTrail を拒否するサービスコントロールポリシー (SCP) をアタッチする","AWS Config ルールで CloudTrail が有効かどうかを監視する","各アカウントの管理者に IAM アクセス許可の境界を設定する"],
 a:[1],k:["50 のアカウント","管理者を含めて","できないように"],
 st:"たくさんの店舗をもつチェーン本部の「全店共通ルール」が SCP。各店舗の店長（アカウントの管理者）がどんな権限を持っていても、本部ルールで禁止された操作はできない。IAM ポリシーは店舗ごとの就業規則なので、店長が書き換えられてしまう。",
-m:[["Organizations","組織のルート",0],["SCP","OU単位で権限の上限を設定",1],["各アカウント","管理者でも拒否",0],["CloudTrail","停止・削除できない",0]],
+m:{type:"nest",tree:{t:"Organizations（ルート）",n:"SCP は下の全アカウントに効く",hl:1,c:[{t:"OU（本番）",c:[{t:"アカウント A",n:"管理者も拒否"},{t:"アカウント B",n:"管理者も拒否"},{t:"アカウント C",n:"管理者も拒否"}]}]}},
 ex:["50アカウント分の設定が必要で、各アカウントの管理者がポリシーを外せてしまう。","正解。SCP は権限を与えるものではなく、上限を決めるガードレール。アカウント内の管理者にも効く（管理アカウント自体には効かない点も覚えておく）。","Config は「検出して知らせる」仕組み。停止そのものは防げない。","アクセス許可の境界は IAM ユーザーやロール単位の設定。全アカウントを一括で守る仕組みではない。"],
 h:"複数アカウントで「絶対に禁止」→ SCP。検出して知らせるだけ → Config"},
 
@@ -361,7 +373,7 @@ q:"あるサブネット内の EC2 インスタンス群に対して、特定の
 o:["セキュリティグループに、その IP 範囲を拒否するインバウンドルールを追加する","サブネットのネットワーク ACL に、その IP 範囲を拒否するインバウンドルールを、許可ルールより小さいルール番号で追加する","ルートテーブルに、その IP 範囲をブラックホールとして追加する","Amazon GuardDuty を有効にする"],
 a:[1],k:["拒否","サブネット単位"],
 st:"セキュリティグループは部屋ごとの招待客リスト。リストに載っている人だけ入れる方式で、「この人はお断り」とは書けない。ネットワーク ACL はフロア入口の警備で、「この人たちは通さない」と書ける。番号の小さいルールから順に見ていくので、お断りのルールを先に置く。",
-m:[["攻撃元 IP","特定の CIDR",0],["ネットワーク ACL","サブネットの境界で拒否",1],["セキュリティグループ","インスタンス単位で許可のみ",0],["EC2","サブネット内",0]],
+m:{type:"nest",tree:{t:"VPC",c:[{t:"サブネット",n:"NACL：入口で拒否できる",hl:1,c:[{t:"EC2",n:"SG は許可だけ"},{t:"EC2",n:"SG は許可だけ"}]}]}},
 ex:["セキュリティグループには許可ルールしかない。拒否ルールは書けない。","正解。NACL はステートレスで、許可と拒否の両方を書け、ルール番号の小さい順に評価される。","ルートテーブルは送信先の経路を決めるもの。送信元を基準に受信を止めることはできない。","GuardDuty は検出するだけで、ブロックはしない。"],
 h:"「拒否したい」→ NACL（ALB などの前なら WAF の IP セット）。セキュリティグループは許可だけ・ステートフル"},
 
@@ -397,7 +409,7 @@ q:"企業の本番データベースは、単一の Amazon RDS for MySQL イン�
 o:["同じ AZ にリードレプリカを作成する","RDS のマルチ AZ 配置を有効にする","1 時間ごとに手動でスナップショットを取得する","より大きな DB インスタンスクラスに変更する"],
 a:[1],k:["AZ の障害","手動操作なしで","自動的にフェイルオーバー"],
 st:"本店の隣町（別の AZ）に、常に同じ在庫をリアルタイムで持つ控えの店を用意しておくのがマルチ AZ。本店が停電したら、お客さんの案内先（DNS のエンドポイント）が自動で控えの店に切り替わる。お客さんは同じ住所を訪ねるだけでいい。",
-m:[["アプリ","同じエンドポイントに接続",0],["プライマリ","AZ-a",0],["同期レプリケーション","データを常に複製",1],["スタンバイ","AZ-c・自動で昇格",0]],
+m:{type:"nest",tree:{t:"VPC",n:"同期レプリケーション",c:[{t:"AZ-a",c:[{t:"プライマリ",n:"読み書き"}]},{t:"AZ-c",c:[{t:"スタンバイ",n:"障害時に自動で昇格",hl:1}]}]}},
 ex:["同じ AZ では AZ 障害に耐えられない。リードレプリカは非同期で、自動フェイルオーバーもしない（手動で昇格させる）。","正解。マルチ AZ はスタンバイへ同期レプリケーションし、障害時は通常 1〜2 分で自動フェイルオーバーする。","スナップショットからの復元は手動で時間がかかり、直近のデータも失われる。","性能は上がるが、可用性は変わらない。"],
 h:"高可用性・自動フェイルオーバー → マルチ AZ（同期）。読み取り性能 → リードレプリカ（非同期）"},
 
@@ -433,7 +445,7 @@ q:"Auto Scaling グループ内の EC2 インスタンスでウェブアプリ�
 o:["ALB のスティッキーセッションを有効にする","セッション情報を Amazon ElastiCache (Redis OSS) に保存するようにアプリケーションを変更する","セッション情報を各インスタンスの EBS ボリュームに保存する","スケールインを無効にする"],
 a:[1],k:["セッション情報","スケールインのたびに","ログアウト"],
 st:"お客さんのカートの中身を担当店員の頭の中だけで覚えていたら、その店員が帰った瞬間に消えてしまう。共有のメモ帳（ElastiCache）に書いておけば、どの店員が対応しても続きから接客できる。サーバーをいつ入れ替えても困らない状態にすることを、ステートレス化と呼ぶ。",
-m:[["ALB","どのインスタンスにも振り分け",0],["EC2 × 複数","ステートレス",0],["ElastiCache","セッションを共有保存",1]],
+m:{type:"share",head:["ALB","どの EC2 にも振り分け",0],top:[["EC2","ステートレス",0],["EC2","ステートレス",0],["EC2","ステートレス",0]],bottom:["ElastiCache","セッションを共有保存",1]},
 ex:["スティッキーセッションは同じインスタンスに振り分け続けるだけ。そのインスタンスが消えればセッションも消える。","正解。セッションを外部の共有ストア（ElastiCache や DynamoDB）に置けば、インスタンスが入れ替わってもセッションが残る。","EBS は基本的に1つのインスタンスに接続するもので、他のインスタンスと共有できない。","コストが増えるうえ、障害で落ちたインスタンスのセッションは結局失われる。"],
 h:"セッションが消える → 外部に保存（ElastiCache / DynamoDB）＝ ステートレス化"},
 
@@ -442,7 +454,7 @@ q:"複数の AZ に分散した Linux の EC2 インスタンスから、同じ�
 o:["Amazon EBS マルチアタッチ","Amazon EFS","Amazon S3 をマウントして使う","インスタンスストア"],
 a:[1],k:["複数の AZ","Linux","同時に読み書き","自動で拡張"],
 st:"EBS は各店員の手元の引き出し。EFS は、どの支店からも使える共有キャビネットで、書類が増えると勝手に大きくなる。Windows の店なら FSx for Windows File Server という別のキャビネットを使う。",
-m:[["EC2（AZ-a）","NFS でマウント",0],["EC2（AZ-c）","NFS でマウント",0],["Amazon EFS","マルチ AZ・自動で伸縮",1]],
+m:{type:"share",zones:["AZ-a","AZ-c","AZ-d"],top:[["EC2","NFS でマウント",0],["EC2","NFS でマウント",0],["EC2","NFS でマウント",0]],bottom:["Amazon EFS","AZ をまたいで 1 つを共有",1]},
 ex:["マルチアタッチは io1/io2 限定で、同じ AZ 内でしか使えない。クラスター対応のファイルシステムも必要で、要件を満たさない。","正解。EFS は NFS ベースで、複数の AZ にある多数のインスタンスから同時にアクセスでき、容量は自動で伸縮する。","S3 はオブジェクトストレージ。ファイルシステムとしての同時書き込みやロックには向かない。","インスタンスストアはそのインスタンス専用の一時ストレージで、共有できない。"],
 h:"Linux の共有 → EFS。Windows の共有 → FSx for Windows。高性能計算 → FSx for Lustre"},
 
@@ -451,7 +463,7 @@ q:"ウェブアプリケーションを高可用性にしたいと考えてい�
 o:["Auto Scaling グループを 2 つ以上の AZ にまたがるように構成する","ALB の背後にインスタンスを配置し、Auto Scaling グループのヘルスチェックタイプを ELB にする","1 台の大きなインスタンスに Elastic IP アドレスを割り当てる","すべてのインスタンスをクラスタープレイスメントグループに配置する","インスタンスの自動復旧 (auto recovery) だけを有効にする"],
 a:[0,1],k:["単一の AZ に障害","自動で置き換える","2 つ選択"],
 st:"支店を2つの町（AZ）に分けて出しておけば、片方の町が停電しても営業できる。さらに店長（Auto Scaling）が、入口の受付（ALB）から「このレジ、反応がありません」と報告を受けたら、そのレジ係を交代させる。ヘルスチェックタイプを ELB にするのは、この報告を受け取るため。",
-m:[["ALB","ヘルスチェック",0],["Auto Scaling","ELB ヘルスチェックで置き換え",1],["EC2（AZ-a）","",0],["EC2（AZ-c）","",0]],
+m:{type:"nest",tree:{t:"VPC",d:"v",c:[{t:"ALB",n:"ヘルスチェック"},{t:"Auto Scaling グループ",n:"ELB ヘルスチェックで置き換え",hl:1,c:[{t:"AZ-a",c:[{t:"EC2"}]},{t:"AZ-c",c:[{t:"EC2"}]}]}]}},
 ex:["正解。複数の AZ にまたがることで AZ 障害に耐える。","正解。ELB ヘルスチェックにすると、アプリが応答しないインスタンスも異常と判定されて置き換えられる（EC2 ヘルスチェックだけではハードウェアの障害しか分からない）。","単一のインスタンスは単一障害点になる。","クラスタープレイスメントグループは1つの AZ 内に密集して配置する低レイテンシー用の仕組み。可用性はむしろ下がる。","自動復旧は同じ AZ 内での復旧で、AZ 障害には対応しない。"],
 h:"高可用性の定番 = ALB ＋ マルチ AZ の Auto Scaling ＋ ELB ヘルスチェック"},
 
@@ -586,7 +598,7 @@ q:"企業の AWS 請求書を確認したところ、NAT ゲートウェイの�
 o:["NAT ゲートウェイを NAT インスタンスに置き換える","S3 のゲートウェイ型 VPC エンドポイントを作成し、ルートテーブルに追加する","S3 のインターフェイス型 VPC エンドポイントを作成する","EC2 インスタンスをパブリックサブネットに移動する"],
 a:[1],k:["NAT ゲートウェイのデータ処理料金","同じリージョンの S3","最も簡単"],
 st:"毎日、倉庫から隣の保管庫まで、わざわざ有料道路（NAT ゲートウェイ）を通って荷物を運んでいた。ゲートウェイエンドポイントは無料の専用通路。ルートテーブルに1行足すだけで、S3 宛ての荷物は自動でこちらを通るようになる。",
-m:[["EC2","プライベートサブネット",0],["ルートテーブル","S3 のプレフィックスリスト",0],["Gateway Endpoint","料金 0 円",1],["S3","",0]],
+m:{type:"nest",tree:{t:"リージョン（同じリージョン）",c:[{t:"VPC",d:"v",c:[{t:"プライベートサブネット",c:[{t:"EC2"}]},{t:"Gateway Endpoint",n:"ルートテーブルに追加",hl:1}]},{t:"S3",n:"VPC の外にある"}]}},
 ex:["NAT インスタンスは自分で管理する必要があり、可用性や性能の問題もある。「最も簡単」ではない。","正解。ゲートウェイエンドポイントは追加料金なし。S3 と DynamoDB 向けの通信を NAT から外せる。","インターフェイスエンドポイントは時間料金とデータ処理料金がかかる。オンプレミスからの接続などで使う。","パブリックサブネットへの移動はセキュリティの後退。"],
 h:"NAT の料金が高い × S3 / DynamoDB → ゲートウェイエンドポイント（無料）"},
 
@@ -622,7 +634,7 @@ q:"企業は EC サイトのウェブサーバーを、1 つのアベイラビ�
 o:["1 つのサブネットを 2 つの AZ にまたがるように作成し、その中に EC2 インスタンスを 2 台配置する","2 つの AZ にそれぞれパブリックサブネットを作成し、各サブネットに EC2 インスタンスを配置して、ALB で負荷を分散する","1 つの AZ に 2 つのサブネットを作成し、それぞれに EC2 インスタンスを配置する","2 つのリージョンにそれぞれ VPC を作成し、VPC ピアリングで接続する"],
 a:[1],k:["1 つのアベイラビリティーゾーン (AZ) が停止しても"],
 st:"VPC は自分の土地を塀で囲った区画で、その中に建物（AZ）がいくつか建っている。サブネットは建物の中の部屋。部屋は1つの建物の中にしか作れないので、「建物Aが停電しても大丈夫」にするには、建物Aと建物Bの両方に部屋を作って、それぞれに店員（EC2）を置くしかない。入口の受付（ALB）が、動いている部屋にお客さんを案内する。",
-m:[["リージョン（東京）","いちばん外側",0],["VPC","複数の AZ にまたがる",0],["AZ-a / AZ-c","建物 A と建物 B",0],["サブネット × 2","AZ ごとに 1 つずつ",1],["ALB","両方の EC2 に分散",0]],
+m:{type:"nest",tree:{t:"リージョン（東京）",c:[{t:"VPC",n:"リージョン全体・複数の AZ にまたがる",d:"v",c:[{t:"ALB",n:"両方の AZ に振り分け"},{g:1,c:[{t:"AZ-a（建物 A）",c:[{t:"サブネット",hl:1,c:[{t:"EC2"}]}]},{t:"AZ-c（建物 B）",c:[{t:"サブネット",hl:1,c:[{t:"EC2"}]}]}]}]}]}},
 ex:["サブネットは 1 つの AZ の中にしか作れない。複数の AZ にまたがるサブネットは存在しない。","正解。VPC はリージョン全体にまたがり、サブネットは AZ ごとに作る。AZ ごとにサブネットと EC2 を用意し、ALB で振り分けるのが高可用性の基本形。","同じ AZ の中にいくつサブネットを作っても、その AZ が止まれば全部止まる。","リージョンをまたぐ構成は大がかりすぎる。要件は AZ の障害に耐えることで、同じリージョン内の複数 AZ で足りる。"],
 h:"VPC はリージョン単位、サブネットは AZ 単位。「AZ 障害に耐える」→ AZ ごとにサブネットを分ける"},
 
@@ -631,7 +643,7 @@ q:"データベースサーバーをインターネットから直接アクセ�
 o:["パブリックサブネットに配置し、セキュリティグループでインバウンド通信をすべて拒否する","プライベートサブネットに配置し、パブリックサブネットに作成した NAT ゲートウェイへ 0.0.0.0/0 のルートを向ける","プライベートサブネットに配置し、そのサブネットのルートテーブルでインターネットゲートウェイへ 0.0.0.0/0 のルートを向ける","プライベートサブネットに配置し、S3 のゲートウェイ型 VPC エンドポイントを作成する"],
 a:[1],k:["インターネットから直接アクセスされない","パッチをインターネットからダウンロード"],
 st:"奥の部屋（プライベートサブネット）にいる人は、外の通りから直接は訪ねて来られない。でも買い物（パッチのダウンロード）はしたい。そこで玄関の部屋（パブリックサブネット）にいるお使い係（NAT ゲートウェイ）に頼む。お使い係は外へ出て行けるけれど、外の人が奥の部屋に入ってくることはできない。行きは出られて、外からは入れない、という一方通行がポイント。",
-m:[["DB サーバー","プライベートサブネット",0],["ルートテーブル","0.0.0.0/0 → NAT",0],["NAT ゲートウェイ","パブリックサブネットに置く",1],["インターネットゲートウェイ","外の世界への門",0]],
+m:{type:"nest",tree:{t:"VPC",d:"v",c:[{t:"インターネットゲートウェイ",n:"VPC の門"},{g:1,c:[{t:"パブリックサブネット",c:[{t:"NAT ゲートウェイ",n:"お使い係",hl:1}]},{t:"プライベートサブネット",n:"0.0.0.0/0 → NAT",c:[{t:"DB サーバー",n:"外から入れない"}]}]}]}},
 ex:["パブリックサブネットに置くと、設定次第で外から届く場所になる。「直接アクセスされない場所」という要件に反する。","正解。NAT ゲートウェイは内側から外への通信だけを通し、外から始まる通信は通さない。NAT ゲートウェイ自体はパブリックサブネットに置く点もよく問われる。","インターネットゲートウェイへのルートを持つサブネットは、定義上パブリックサブネットになる。","ゲートウェイ型エンドポイントは S3 と DynamoDB への通路。インターネット上のパッチ配布サイトには届かない。"],
 h:"中から外へは出たい、外からは入れたくない → プライベートサブネット ＋ NAT ゲートウェイ（パブリック側に置く）"},
 
@@ -640,7 +652,7 @@ q:"ウェブサーバー群（セキュリティグループ SG-web）からデ�
 o:["SG-db のインバウンドルールに、ウェブサーバーのプライベート IP アドレスを 1 台ずつ追加する","SG-db のインバウンドルールで、ポート 3306 の送信元に SG-web を指定する","サブネットのネットワーク ACL で、すべての通信を許可する","SG-db のアウトバウンドルールで、ポート 3306 を SG-web 宛てに許可する"],
 a:[1],k:["ポート 3306 の通信だけ","台数が増減"],
 st:"会議室（DB）の入口に「営業部（SG-web）の社員証を持っている人だけ入室可」と貼るイメージ。社員の名前（IP アドレス）を一人ずつ書くと、異動や新人が来るたびに書き直しになる。所属で許可しておけば、何人増えても減っても貼り紙はそのままでいい。",
-m:[["ウェブサーバー","SG-web に所属",0],["SG-db のインバウンド","送信元 = SG-web",1],["RDS / DB","3306 だけ受け付け",0]],
+m:{type:"share",top:[["EC2","SG-web",0],["EC2","SG-web",0],["EC2","SG-web",0]],bottom:["RDS（SG-db）","送信元 = SG-web なら 3306 を許可",1]},
 ex:["台数が増減するたびに書き換えが必要になり、管理しやすいとは言えない。","正解。セキュリティグループは送信元に別のセキュリティグループを指定できる。所属で許可するので、台数が変わっても設定を変える必要がない。","すべて許可すると、3306 だけという要件に反する。","セキュリティグループはステートフル。受け付けた通信の返事は自動で通るので、DB 側のアウトバウンドを設定しても入口の制限にはならない。"],
 h:"台数が変わるサーバーからの許可 → 送信元にセキュリティグループを指定（IP は書かない）"},
 
@@ -775,7 +787,7 @@ q:"企業には 30 の VPC があり、それぞれを相互に接続し、さ�
 o:["すべての VPC の組み合わせで VPC ピアリングを設定する","AWS Transit Gateway をハブとして作成し、各 VPC とオンプレミスの VPN を接続する","1 つの VPC を中継地点にして、VPC ピアリングで他の VPC 同士の通信を通す","各 VPC に NAT ゲートウェイを作成する"],
 a:[1],k:["30 の VPC","相互に接続","オンプレミス","できるだけ簡単"],
 st:"30 軒の家すべてに糸電話をつなぐと、糸が 435 本必要になる（30×29÷2）。Transit Gateway は町の真ん中の電話交換局。各家は交換局に 1 本つなぐだけで、どの家とも、町の外（オンプレミス）とも話せる。",
-m:[["VPC × 30","各 VPC から 1 本ずつ",0],["Transit Gateway","中央のハブ",1],["オンプレミス","VPN / Direct Connect",0]],
+m:{type:"share",both:1,top:[["VPC-A","",0],["VPC-B","",0],["VPC-C","",0],["オンプレミス","VPN",0]],bottom:["Transit Gateway","ハブ：各拠点は 1 本ずつ接続",1]},
 ex:["30 個の VPC だと 435 本のピアリングが必要になり、管理が非常に大変。","正解。Transit Gateway はハブ＆スポーク型で、多数の VPC とオンプレミスをまとめて接続できる。","VPC ピアリングは推移的な通信（A→B→C）をサポートしない。中継はできない。","NAT ゲートウェイはインターネットへの出口で、VPC 同士の接続とは関係ない。"],
 h:"多数の VPC ＋ オンプレミス → Transit Gateway。VPC ピアリングは 1 対 1 で、中継できない"},
 
@@ -1079,7 +1091,7 @@ function submit(){
     <div class="exp">
       <div class="card cons"><h4>${c.correct?"拾えていたかな？この問題の制約":"読み落とした制約はどれ？"}</h4><p>${q.k.filter(k=>!/選択$/.test(k)).map(k=>"「"+esc(k)+"」").join(" ")}</p>${c.correct?"":`<p class="say">声に出してみよう：どの言葉に飛びついた？ この制約で消える選択肢はどれ？</p>`}</div>
       <div class="card story"><h4>ストーリーで理解する</h4><p>${esc(q.st)}</p></div>
-      <div class="card iso"><h4>立体マップ（リクエストは上から下へ流れる）</h4>${isoMap(q.m)}</div>
+      <div class="card iso">${drawMap(q.m)}</div>
       <div class="card hook"><h4>試験での見分け方</h4><p>${esc(q.h)}</p></div>
     </div>`;
   sess.results.push({q, correct:c.correct, days:c.days});
@@ -1113,7 +1125,104 @@ function wrap(s, maxEm){
   for(const ch of s){ const cw=/[\x00-\x7F]/.test(ch)?.58:1; if(w+cw>maxEm && line){ out.push(line); line=""; w=0; } line+=ch; w+=cw; }
   if(line) out.push(line); return out;
 }
-function isoMap(nodes){
+function drawMap(m){
+  if(Array.isArray(m)) return `<h4>立体マップ：経路型（リクエストは上から下へ流れる）</h4>${flowMap(m)}`;
+  if(m.type==="share") return `<h4>立体マップ：共有型（複数から 1 つを共有する）</h4>${shareMap(m)}`;
+  return `<h4>立体マップ：入れ子型（外側から内側へ）</h4>${nestMap(m.tree)}`;
+}
+function fit(text, width, max, min){ return Math.max(min, Math.min(max, width/Math.max(1,emw(text)))); }
+function arrow(x, y1, y2, both){
+  let s = `<line class="ar" x1="${x}" y1="${y1+(both?7:0)}" x2="${x}" y2="${y2-7}"/><path class="ah" d="M${x-5} ${y2-7}L${x+5} ${y2-7}L${x} ${y2}Z"/>`;
+  if(both) s += `<path class="ah" d="M${x-5} ${y1+7}L${x+5} ${y1+7}L${x} ${y1}Z"/>`;
+  return s;
+}
+/* 斜めから見た箱：上面・正面・右側面。正面に名前とメモを書く */
+function box(L, T, W, k, th, name, sub, hl, max){
+  const fs = fit(name, W-12, max||13, 9);
+  const ny = sub ? T+k+th*0.44 : T+k+th/2+fs*0.36;
+  let s = `<g class="${hl?"hl":""}">
+    <polygon class="t" points="${L+k},${T} ${L+W+k},${T} ${L+W},${T+k} ${L},${T+k}"/>
+    <polygon class="r" points="${L+W},${T+k} ${L+W+k},${T} ${L+W+k},${T+th} ${L+W},${T+k+th}"/>
+    <rect class="l" x="${L}" y="${T+k}" width="${W}" height="${th}"/>
+    <text class="nm" x="${L+W/2}" y="${ny.toFixed(1)}" font-size="${fs.toFixed(1)}">${esc(name)}</text>`;
+  if(sub){ const ss = fit(sub, W-10, 10.5, 7.5); s += `<text class="sb" x="${L+W/2}" y="${(T+k+th*0.8).toFixed(1)}" font-size="${ss.toFixed(1)}">${esc(sub)}</text>`; }
+  return s + `</g>`;
+}
+/* 共有型：上段に利用側を横並び、下段に共有先を 1 枚。zones があれば AZ の帯を背景に引く */
+function shareMap(m){
+  const k=12, th=40, M=10, W=360-2*M-k, n=m.top.length, colW=W/n, gap=34;
+  let y = m.zones ? 24 : 4, body = "";
+  let headBottom = null;
+  if(m.head){
+    body += box(M+10, y, W-20, k, th, m.head[0], m.head[1], m.head[2], 14);
+    headBottom = y+k+th; y = headBottom + gap;
+  }
+  const bw = Math.min(104, colW-12), cTop = y, cBottom = y+k+th;
+  m.top.forEach(([t,sub,hl],i)=>{
+    const cx = M + colW*(i+.5);
+    body += box(cx-bw/2, cTop, bw, k, th, t, sub, hl, 12);
+    if(headBottom!==null) body += arrow(cx+k/2, headBottom+2, cTop+k/2);
+  });
+  const bTop = cBottom + gap;
+  body += box(M+4, bTop, W-8, k, th, m.bottom[0], m.bottom[1], m.bottom[2], 15);
+  m.top.forEach((_,i)=>{ const cx = M + colW*(i+.5); body += arrow(cx, cBottom+2, bTop+k/2, m.both); });
+  const H = bTop+k+th+8;
+  let zones = "";
+  (m.zones||[]).forEach((z,i)=>{
+    const x = M + colW*i + 2;
+    zones += `<rect class="zone" x="${x}" y="4" width="${colW-4}" height="${H-8}" rx="8"/><text class="zl" x="${x+8}" y="18">${esc(z)}</text>`;
+  });
+  return `<svg viewBox="0 0 360 ${H}" role="img" aria-label="共有型の立体マップ">${zones}${body}</svg>`;
+}
+/* 入れ子型：箱の中に箱。d:"h" は横並び、d:"v" は縦並び、g:1 は枠のないまとまり */
+function nestMeasure(n){
+  if(!n.c){
+    n.mw = Math.max(64, emw(n.t)*12+20, n.n ? emw(n.n)*10.5+16 : 0);
+    n.mh = n.n ? 44 : 32; return;
+  }
+  n.c.forEach(nestMeasure);
+  const pad = n.g?0:10, hdr = n.g?0:(n.n?34:21), gap = 8, h = (n.d||"h")==="h";
+  const cw = h ? n.c.reduce((a,c)=>a+c.mw,0)+gap*(n.c.length-1) : Math.max(...n.c.map(c=>c.mw));
+  const ch = h ? Math.max(...n.c.map(c=>c.mh)) : n.c.reduce((a,c)=>a+c.mh,0)+gap*(n.c.length-1);
+  const lw = n.g ? 0 : Math.max(emw(n.t)*11.5, n.n ? emw(n.n)*10 : 0)+20;
+  n.mw = Math.max(cw+2*pad, lw); n.mh = ch+hdr+pad;
+}
+function nestPlace(n, x, y, w, h){
+  n.x=x; n.y=y; n.w=w; n.h=h;
+  if(!n.c) return;
+  const pad = n.g?0:10, hdr = n.g?0:(n.n?34:21), gap = 8, hz = (n.d||"h")==="h";
+  const iw = w-2*pad, ih = h-hdr-pad;
+  if(hz){
+    const tot = n.c.reduce((a,c)=>a+c.mw,0), extra = (iw-tot-gap*(n.c.length-1))/n.c.length;
+    let cx = x+pad; n.c.forEach(c=>{ const cw = c.mw+extra; nestPlace(c, cx, y+hdr, cw, ih); cx += cw+gap; });
+  }else{
+    let cy = y+hdr; const last = n.c.length-1;
+    const used = n.c.reduce((a,c)=>a+c.mh,0)+gap*last;
+    n.c.forEach((c,i)=>{ const chh = c.mh + (i===last ? ih-used : 0); nestPlace(c, x+pad, cy, iw, chh); cy += chh+gap; });
+  }
+}
+function nestDraw(n, depth){
+  if(n.g) return n.c.map(c=>nestDraw(c, depth)).join("");
+  if(!n.c){
+    const fs = fit(n.t, n.w-14, 12, 9), cx = n.x+n.w/2, my = n.y+n.h/2;
+    let s = `<g class="${n.hl?"hl":""}"><rect class="r" x="${n.x+3}" y="${n.y+3}" width="${n.w}" height="${n.h}" rx="6"/><rect class="t lf" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="6"/>`;
+    s += `<text class="nm" x="${cx}" y="${(n.n ? my-3 : my+fs*0.36).toFixed(1)}" font-size="${fs.toFixed(1)}">${esc(n.t)}</text>`;
+    if(n.n) s += `<text class="sb" x="${cx}" y="${(my+12).toFixed(1)}" font-size="${fit(n.n, n.w-10, 10.5, 7.5).toFixed(1)}">${esc(n.n)}</text>`;
+    return s + `</g>`;
+  }
+  let s = `<rect class="r" x="${n.x+4}" y="${n.y+4}" width="${n.w}" height="${n.h}" rx="9"/>
+    <rect class="nb d${depth%2}${n.hl?" hlb":""}" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="9"/>
+    <text class="nl${n.hl?" hlt":""}" x="${n.x+10}" y="${n.y+15}">${esc(n.t)}</text>`;
+  if(n.n) s += `<text class="nn" x="${n.x+10}" y="${n.y+28}">${esc(n.n)}</text>`;
+  return s + n.c.map(c=>nestDraw(c, depth+1)).join("");
+}
+function nestMap(tree){
+  nestMeasure(tree);
+  const vw = Math.max(360, tree.mw+8), x0 = (vw-tree.mw-4)/2;
+  nestPlace(tree, x0, 2, tree.mw, tree.mh);
+  return `<svg viewBox="0 0 ${vw} ${tree.mh+8}" role="img" aria-label="入れ子型の立体マップ">${nestDraw(tree, 0)}</svg>`;
+}
+function flowMap(nodes){
   const cx=96, hw=84, hh=22, th=10, gap=78, top=6;
   const H = top + (nodes.length-1)*gap + hh*2 + th + 8;
   let s = `<svg viewBox="0 0 360 ${H}" role="img" aria-label="構成の立体マップ">`;
